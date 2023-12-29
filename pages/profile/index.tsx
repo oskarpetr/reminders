@@ -3,7 +3,7 @@ import Layout from "@/components/generic/Layout";
 
 export default function Profile() {
   return (
-    <Layout projectId={undefined}>
+    <Layout project={undefined}>
       <Headline text="Profile" />
     </Layout>
   );
