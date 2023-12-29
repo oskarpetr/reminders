@@ -9,7 +9,7 @@ import { Project } from "@/types/Project.types";
 import projects from "@/test-data/projects-data";
 
 export default function Project() {
-  let { project: projectId } = useParams();
+  let { projectId } = useParams();
 
   projectId = projectId ?? 1;
 
