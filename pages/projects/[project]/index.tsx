@@ -9,7 +9,9 @@ import { Project } from "@/types/Project.types";
 import projects from "@/test-data/projects-data";
 
 export default function Project() {
-  const { project: projectId } = useParams();
+  let { project: projectId } = useParams();
+
+  projectId = projectId ?? 1;
 
   const project =
     projects.find((project) => project.id === parseInt(projectId as string)) ??
