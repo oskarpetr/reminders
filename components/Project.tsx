@@ -8,7 +8,7 @@ export default function Project({ project }: { project: Project }) {
     <Link href={`/projects/${project.id}`}>
       <div className="py-6 px-8 flex justify-between items-center bg-white bg-opacity-5 rounded-2xl border border-white border-opacity-10">
         <div className="flex gap-4 items-center">
-          <ProjectIcon color={colorToHex(project.color)} icon={project.icon} />
+          <ProjectIcon color={project.color} icon={project.icon} />
 
           <div className="flex flex-col">
             <p className="text-white font-bold text-xl">{project.name}</p>
