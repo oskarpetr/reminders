@@ -1,3 +1,5 @@
+"use client";
+
 import Headline from "@/components/generic/Headline";
 import Layout from "@/components/generic/Layout";
 import ProjectIcon from "@/components/project/ProjectIcon";
@@ -9,9 +11,7 @@ import { Project } from "@/types/Project.types";
 import projects from "@/test-data/projects-data";
 
 export default function Project() {
-  let { projectId } = useParams();
-
-  projectId = projectId ?? 1;
+  let { projectId } = useParams() ?? { projectId: 1 };
 
   const project =
     projects.find((project) => project.id === parseInt(projectId as string)) ??
