@@ -9,22 +9,28 @@ export default function Users({ users }: { users: any[] }) {
   const removeUser = () => {};
 
   const Trigger = (
-    <div className="flex items-center gap-4 cursor-pointer px-6 py-3 rounded-lg hover:bg-white hover:bg-opacity-[3%] transition-all select-none">
-      <p className="text-gray-500 font-bold">Shared with</p>
+    <div className="flex items-center gap-3 cursor-pointer px-6 py-3 rounded-xl bg-white bg-opacity-5 transition-all select-none border border-white border-opacity-10">
+      <p className="text-neutral-400 font-bold">
+        {users.length > 0 ? "Shared with" : "Share project"}
+      </p>
 
-      <div className="flex">
-        {users.map((user, index) => {
-          return (
-            <div
-              key={user}
-              className="w-8 h-8 bg-neutral-700 rounded-full border border-white border-opacity-10"
-              style={{
-                marginRight: index !== users.length - 1 ? "-10px" : "0px",
-              }}
-            ></div>
-          );
-        })}
-      </div>
+      {users.length > 0 ? (
+        <div className="flex">
+          {users.map((user, index) => {
+            return (
+              <div
+                key={user}
+                className="w-8 h-8 bg-neutral-700 rounded-full border border-white border-opacity-10"
+                style={{
+                  marginRight: index !== users.length - 1 ? "-10px" : "0px",
+                }}
+              ></div>
+            );
+          })}
+        </div>
+      ) : (
+        <Icon icon="Export" className="opacity-50" />
+      )}
     </div>
   );
 

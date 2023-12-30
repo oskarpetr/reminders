@@ -1,13 +1,30 @@
-import { colors } from "@/utils/colors";
+import colorToHex, { colors } from "@/utils/colors";
 import Icon from "../generic/Icon";
 import Modal from "../generic/Modal";
 import { Dispatch, SetStateAction, useState } from "react";
 import { cn } from "@/utils";
 import icons from "@/utils/icons";
 import { DialogClose } from "../ui/Dialog";
+import { useProjects } from "@/context/ProjectsProvider";
 
 export default function AddProject() {
-  const createProject = () => {};
+  const { projects, setProjects } = useProjects();
+
+  const createProject = () => {
+    // api call
+
+    const projectsCopy = [...projects!];
+    projectsCopy.push({
+      id: Math.ceil(Math.random() * 1000),
+      name: name,
+      color: selectedColor!,
+      icon: selectedIcon!,
+      tasks: [],
+      users: [],
+    });
+
+    setProjects(projectsCopy);
+  };
 
   const Trigger = (
     <div className="px-6 py-3 rounded-xl transition-all flex items-center gap-2 hover:bg-white hover:bg-opacity-5 cursor-pointer">
@@ -76,15 +93,15 @@ function SelectColor({
 }) {
   return (
     <div className="flex justify-between items-center gap-3">
-      {Object.values(colors).map((color) => {
+      {Object.entries(colors).map((entry) => {
         return (
           <div
-            key={color}
-            onClick={() => setSelectedColor(color)}
-            style={{ backgroundColor: color }}
+            key={entry[0]}
+            onClick={() => setSelectedColor(entry[0])}
+            style={{ backgroundColor: entry[1] }}
             className={cn(
               "w-10 h-10 rounded-full cursor-pointer flex items-center justify-center transition-all",
-              selectedColor === color
+              selectedColor === entry[0]
                 ? "border-[3px] border-white border-opacity-80"
                 : null
             )}
@@ -93,7 +110,7 @@ function SelectColor({
               icon="Check"
               className={cn(
                 "text-xl transition-all",
-                selectedColor === color ? "opacity-100" : "opacity-0"
+                selectedColor === entry[0] ? "opacity-100" : "opacity-0"
               )}
             />
           </div>
@@ -119,7 +136,7 @@ function SelectIcon({
           <div
             key={icon}
             onClick={() => setSelectedIcon(icon)}
-            style={{ backgroundColor: selectedColor ?? "gray" }}
+            style={{ backgroundColor: colorToHex(selectedColor!) ?? "gray" }}
             className={cn(
               "w-10 h-10 rounded-full cursor-pointer flex items-center justify-center transition-all",
               selectedIcon === icon

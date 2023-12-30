@@ -1,7 +1,7 @@
 import Headline from "@/components/generic/Headline";
 import Project from "../components/Project";
 import Layout from "@/components/generic/Layout";
-import projects from "@/test-data/projects-data";
+import { useProjects } from "@/context/ProjectsProvider";
 // import dbConnection from "@/utils/db";
 
 export default function Home() {
@@ -11,6 +11,8 @@ export default function Home() {
   //     console.log(results);
   //   });
   // };
+
+  const { projects } = useProjects();
 
   return (
     <Layout project={undefined}>

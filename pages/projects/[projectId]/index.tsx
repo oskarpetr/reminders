@@ -8,10 +8,12 @@ import Users from "@/components/project/Users";
 import colorToHex from "@/utils/colors";
 import { useParams } from "next/navigation";
 import { Project } from "@/types/Project.types";
-import projects from "@/test-data/projects-data";
 import { useRouter } from "next/router";
+import { useProjects } from "@/context/ProjectsProvider";
 
 export default function Project() {
+  const { projects } = useProjects();
+
   let { projectId } = useParams() ?? { projectId: projects[0].id };
   const routerReady = useRouter().isReady;
 

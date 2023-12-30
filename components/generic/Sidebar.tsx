@@ -3,9 +3,11 @@ import { cn } from "@/utils/cn";
 import colorToHex from "@/utils/colors";
 import Link from "next/link";
 import Icon from "./Icon";
-import projects from "@/test-data/projects-data";
+import projectsData from "@/test-data/projects-data";
 import { useRouter } from "next/router";
 import AddProject from "../modals/AddProject";
+import { useState } from "react";
+import { useProjects } from "@/context/ProjectsProvider";
 
 export default function Sidebar({ project }: { project: Project | undefined }) {
   const menu = [
@@ -22,6 +24,8 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
   ];
 
   const path = useRouter().pathname;
+
+  const { projects } = useProjects();
 
   return (
     <div className="w-[25rem] h-screen bg-white bg-opacity-5 fixed px-10 py-20 flex flex-col border-r border-white border-opacity-10">
@@ -47,7 +51,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
           </p>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           {projects.map((proj) => {
             return (
               <Link
@@ -78,7 +82,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
       <div className="flex flex-col gap-4 mt-8">
         <p className="font-bold opacity-50">Dashboard</p>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           {menu.map((item) => {
             return (
               <Link
