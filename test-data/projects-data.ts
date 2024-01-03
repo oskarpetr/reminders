@@ -8,19 +8,19 @@ const projects: Project[] = [
     color: "blue",
     tasks: [
       {
-        taskId: 1,
+        id: 1,
         name: "Plan a table football tournament",
         due: new Date(),
         done: false,
       },
       {
-        taskId: 2,
+        id: 2,
         name: "Make your own play mud",
         due: new Date(),
         done: false,
       },
       {
-        taskId: 3,
+        id: 3,
         name: "Host a tea party for your family",
         due: new Date(),
         done: true,
@@ -35,19 +35,19 @@ const projects: Project[] = [
     color: "brown",
     tasks: [
       {
-        taskId: 1,
+        id: 1,
         name: "Make a origami swan",
         due: new Date(),
         done: false,
       },
       {
-        taskId: 2,
+        id: 2,
         name: "Make a castle from a duvet",
         due: new Date(),
         done: false,
       },
       {
-        taskId: 3,
+        id: 3,
         name: "Host a talent show for your family",
         due: new Date(),
         done: true,
