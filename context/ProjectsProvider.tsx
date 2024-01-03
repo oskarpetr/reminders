@@ -1,11 +1,13 @@
 import projectsData from "@/test-data/projects-data";
 import { Project } from "@/types/Project.types";
+import axios from "axios";
 import {
   Dispatch,
   PropsWithChildren,
   SetStateAction,
   createContext,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -20,7 +22,24 @@ const ProjectsContext = createContext<ProjectsContextType>({
 });
 
 export default function ProjectsProvider({ children }: PropsWithChildren) {
-  const [projects, setProjects] = useState(projectsData);
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      const res = await axios.get("/api/projects");
+      const data: Project[] = res.data.data;
+
+      let projs: Project[] = [];
+      for (let proj of data) {
+        const res = await axios.get(`/api/projects/${proj.id}`);
+        projs.push(res.data.data);
+      }
+
+      setProjects(projs);
+    }
+
+    fetchProjects();
+  }, []);
 
   return (
     <ProjectsContext.Provider

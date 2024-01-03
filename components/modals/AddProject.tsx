@@ -6,16 +6,33 @@ import { cn } from "@/utils";
 import icons from "@/utils/icons";
 import { DialogClose } from "../ui/Dialog";
 import { useProjects } from "@/context/ProjectsProvider";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function AddProject() {
   const { projects, setProjects } = useProjects();
+  const router = useRouter();
 
-  const createProject = () => {
-    // api call
+  // const { isPending, error, data } = useQuery({
+  //   queryKey: ["add-project"],
+  //   queryFn: () =>
+  //     fetch("https://api.github.com/repos/TanStack/query").then((res) =>
+  //       res.json()
+  //     ),
+  // });
 
-    const projectsCopy = [...projects!];
+  const createProject = async () => {
+    const res = await axios.post("/api/projects", {
+      name: name,
+      color: selectedColor,
+      icon: selectedIcon,
+    });
+
+    const projectId = res.data.data.projectId;
+
+    const projectsCopy = [...projects];
     projectsCopy.push({
-      id: Math.ceil(Math.random() * 1000),
+      id: projectId,
       name: name,
       color: selectedColor!,
       icon: selectedIcon!,
@@ -24,6 +41,8 @@ export default function AddProject() {
     });
 
     setProjects(projectsCopy);
+
+    router.push(`/projects/${projectId}`);
   };
 
   const Trigger = (

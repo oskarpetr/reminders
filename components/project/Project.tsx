@@ -1,6 +1,5 @@
 import Link from "next/link";
-import colorToHex from "@/utils/colors";
-import ProjectIcon from "./project/ProjectIcon";
+import ProjectIcon from "./ProjectIcon";
 import { Project } from "@/types/Project.types";
 
 export default function Project({ project }: { project: Project }) {
@@ -13,12 +12,13 @@ export default function Project({ project }: { project: Project }) {
           <div className="flex flex-col">
             <p className="text-white font-bold text-xl">{project.name}</p>
             <p className="text-white font-bold text-opacity-50">
-              {project.tasks.length} Tasks due
+              {project.tasks.length}{" "}
+              {project.tasks.length === 1 ? "Task" : "Tasks"} due
             </p>
           </div>
         </div>
 
-        <div className="flex">
+        {/* <div className="flex">
           {project.users.map((user, index) => {
             return (
               <div
@@ -31,7 +31,7 @@ export default function Project({ project }: { project: Project }) {
               ></div>
             );
           })}
-        </div>
+        </div> */}
       </div>
     </Link>
   );

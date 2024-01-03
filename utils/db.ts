@@ -1,10 +1,19 @@
-// var mysql = require("mysql");
+// import mssql from "mssql";
 
-// const dbConnection = mysql.createConnection({
-//   host: "192.168.1.31",
+// const dbConnection = {
 //   user: "SA",
 //   password: "Heslo1234.",
 //   database: "Reminders",
-// });
+//   server: "localhost",
+//   pool: {
+//     max: 10,
+//     min: 0,
+//     idleTimeoutMillis: 30000,
+//   },
+//   options: {
+//     encrypt: true,
+//     trustServerCertificate: true,
+//   },
+// };
 
 // export default dbConnection;

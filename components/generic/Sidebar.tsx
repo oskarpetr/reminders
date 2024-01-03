@@ -3,13 +3,16 @@ import { cn } from "@/utils/cn";
 import colorToHex from "@/utils/colors";
 import Link from "next/link";
 import Icon from "./Icon";
-import projectsData from "@/test-data/projects-data";
 import { useRouter } from "next/router";
 import AddProject from "../modals/AddProject";
-import { useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
+import axios from "axios";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Sidebar({ project }: { project: Project | undefined }) {
+  const { projects } = useProjects();
+
   const menu = [
     {
       name: "Home",
@@ -24,8 +27,6 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
   ];
 
   const path = useRouter().pathname;
-
-  const { projects } = useProjects();
 
   return (
     <div className="w-[25rem] h-screen bg-white bg-opacity-5 fixed px-10 py-20 flex flex-col border-r border-white border-opacity-10">

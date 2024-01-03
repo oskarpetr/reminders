@@ -1,16 +1,24 @@
 import Headline from "@/components/generic/Headline";
-import Project from "../components/Project";
+import Project from "../components/project/Project";
 import Layout from "@/components/generic/Layout";
 import { useProjects } from "@/context/ProjectsProvider";
 // import dbConnection from "@/utils/db";
+import sql from "mssql";
+import { useEffect } from "react";
 
 export default function Home() {
   // const query = async () => {
-  //   dbConnection.query("SELECT * FROM USER", (error, results) => {
-  //     if (error) throw error;
-  //     console.log(results);
-  //   });
+  //   await sql.connect(
+  //     "Server=localhost,1433;Database=Reminders;User Id=SA;Password=Heslo1234.;Encrypt=true"
+  //   );
+  //   const result = await sql.query`select * from [Project]`;
+
+  //   console.log(result);
   // };
+
+  // useEffect(() => {
+  //   query();
+  // }, []);
 
   const { projects } = useProjects();
 
