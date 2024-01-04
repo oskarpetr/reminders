@@ -26,7 +26,7 @@ const projects: Project[] = [
         done: true,
       },
     ],
-    users: [1, 1],
+    members: [],
   },
   {
     id: 2,
@@ -53,7 +53,7 @@ const projects: Project[] = [
         done: true,
       },
     ],
-    users: [1],
+    members: [],
   },
 ];
 
