@@ -16,10 +16,15 @@ export const authOptions: NextAuthOptions = {
         if (!credentials || !credentials?.email || !credentials.password)
           return null;
 
-        const req = await fetch("http://localhost:3000/api/sign-in", {
-          method: "POST",
-          body: JSON.stringify({ email: credentials.email }),
-        });
+        const devUrl = "http://localhost:3000/api/sign-in";
+        const prodUrl = "https://reminders.oskarpetr.dev/api/sign-in";
+        const req = await fetch(
+          process.env.NODE_ENV === "development" ? devUrl : prodUrl,
+          {
+            method: "POST",
+            body: JSON.stringify({ email: credentials.email }),
+          }
+        );
 
         const res = await req.json();
         const user = res.data;
