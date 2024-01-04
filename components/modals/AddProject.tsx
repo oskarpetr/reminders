@@ -1,7 +1,7 @@
 import colorToHex, { colors } from "@/utils/colors";
 import Icon from "../generic/Icon";
 import Modal from "../generic/Modal";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { cn } from "@/utils";
 import icons from "@/utils/icons";
 import { DialogClose } from "../ui/Dialog";
@@ -21,7 +21,9 @@ export default function AddProject() {
   //     ),
   // });
 
-  const createProject = async () => {
+  const createProject = async (e: FormEvent) => {
+    e.preventDefault();
+
     const res = await axios.post("/api/projects", {
       name: name,
       color: selectedColor,
@@ -37,7 +39,7 @@ export default function AddProject() {
       color: selectedColor!,
       icon: selectedIcon!,
       tasks: [],
-      users: [],
+      members: [],
     });
 
     setProjects(projectsCopy);
@@ -57,7 +59,7 @@ export default function AddProject() {
   const [selectedIcon, setSelectedIcon] = useState<string>();
 
   const Content = (
-    <div className="flex flex-col gap-8">
+    <form className="flex flex-col gap-8" onSubmit={createProject}>
       <div className="flex flex-col gap-4">
         <p className="font-bold ">Project name</p>
         <input
@@ -90,14 +92,13 @@ export default function AddProject() {
       <DialogClose asChild>
         <button
           className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
-          onClick={createProject}
           type="submit"
         >
           Create project
           <Icon icon="ArrowRight" />
         </button>
       </DialogClose>
-    </div>
+    </form>
   );
 
   return <Modal title="Add project" trigger={Trigger} content={Content} />;

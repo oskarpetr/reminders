@@ -7,14 +7,12 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useProjects } from "@/context/ProjectsProvider";
 import EditTask from "../modals/EditTask";
 import axios from "axios";
-import sqlDate from "@/utils/date";
+import { sqlDate } from "@/utils/date";
 
 export default function Task({
   id,
@@ -49,7 +47,7 @@ export default function Task({
       id: id,
       name: newName ?? name,
       due: sqlDate(newDue ?? due),
-      done: newDone ?? done,
+      done: newDone,
     });
 
     const projectsCopy = [...projects];
@@ -125,7 +123,7 @@ export default function Task({
             {name}
           </p>
           <p className="text-gray-500 font-bold">
-            {new Date(due).toLocaleDateString("en-US")}
+            {new Date(due).toLocaleDateString()}
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import projectsData from "@/test-data/projects-data";
 import { Project } from "@/types/Project.types";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import {
   Dispatch,
   PropsWithChildren,
@@ -23,10 +24,13 @@ const ProjectsContext = createContext<ProjectsContextType>({
 
 export default function ProjectsProvider({ children }: PropsWithChildren) {
   const [projects, setProjects] = useState<Project[]>([]);
+  const { data: session } = useSession();
 
   useEffect(() => {
     async function fetchProjects() {
-      const res = await axios.get("/api/projects");
+      const res = await axios.get("/api/projects", {
+        headers: { Authorization: session?.user?.email },
+      });
       const data: Project[] = res.data.data;
 
       let projs: Project[] = [];

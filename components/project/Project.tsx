@@ -5,16 +5,20 @@ import { Project } from "@/types/Project.types";
 export default function Project({ project }: { project: Project }) {
   return (
     <Link href={`/projects/${project.id}`}>
-      <div className="py-6 px-8 flex justify-between items-center bg-white bg-opacity-5 rounded-2xl border border-white border-opacity-10">
+      <div className="py-5 px-8 flex justify-between items-center bg-white bg-opacity-5 rounded-2xl border border-white border-opacity-10">
         <div className="flex gap-4 items-center">
           <ProjectIcon color={project.color} icon={project.icon} />
 
           <div className="flex flex-col">
             <p className="text-white font-bold text-xl">{project.name}</p>
-            <p className="text-white font-bold text-opacity-50">
-              {project.tasks.length}{" "}
-              {project.tasks.length === 1 ? "Task" : "Tasks"} due
-            </p>
+            {project.tasks.length > 0 ? (
+              <p className="text-white font-bold text-opacity-50">
+                {project.tasks.length}{" "}
+                {project.tasks.length === 1 ? "Task" : "Tasks"} due
+              </p>
+            ) : (
+              <p className="text-white font-bold text-opacity-50">No tasks</p>
+            )}
           </div>
         </div>
 

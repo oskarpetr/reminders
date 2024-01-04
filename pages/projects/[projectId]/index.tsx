@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import { useProjects } from "@/context/ProjectsProvider";
 import AddTask from "@/components/modals/AddTask";
 import Task from "@/components/project/Task";
+import { sortTasksByDate } from "@/utils/date";
+import Members from "@/components/project/Members";
 
 export default function Project() {
   const { projects } = useProjects();
@@ -18,7 +20,7 @@ export default function Project() {
 
   const project = projects!.find(
     (project) => project.id === parseInt(projectId as string)
-  )!;
+  );
 
   return (
     routerReady &&
@@ -28,11 +30,11 @@ export default function Project() {
           text={project.name}
           icon={<AddTask color={project.color} projectId={project.id} />}
           color={colorToHex(project.color)}
-          // element={<Users users={project.users} />}
+          element={<Members members={project.members} />}
         />
 
         {project.tasks.length !== 0 ? (
-          project.tasks.map((task) => {
+          sortTasksByDate(project.tasks).map((task) => {
             return (
               <Task
                 key={task.id}

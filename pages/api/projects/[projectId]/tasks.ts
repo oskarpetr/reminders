@@ -13,10 +13,11 @@ export default async function handler(
         name: string;
         due: string;
         done: boolean;
-        project_id: number;
       } = request.body;
 
-      await sql`INSERT INTO task (name, due, done, project_id) VALUES (${body.name}, ${body.due}, ${body.done}, ${body.project_id});`;
+      await sql`INSERT INTO task (name, due, done, project_id) VALUES (${
+        body.name
+      }, ${body.due}, ${body.done}, ${projectId?.toString()});`;
       const taskId = await sql`SELECT id FROM task ORDER BY id DESC LIMIT 1`;
 
       return response.status(200).json({ data: { taskId: taskId.rows[0].id } });

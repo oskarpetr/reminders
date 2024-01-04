@@ -6,12 +6,11 @@ import Icon from "./Icon";
 import { useRouter } from "next/router";
 import AddProject from "../modals/AddProject";
 import { useProjects } from "@/context/ProjectsProvider";
-import axios from "axios";
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 export default function Sidebar({ project }: { project: Project | undefined }) {
   const { projects } = useProjects();
+  const { data: session } = useSession();
 
   const menu = [
     {
@@ -37,9 +36,9 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
         <div className="w-12 h-12 bg-neutral-500 rounded-full border border-white border-opacity-10"></div>
 
         <div>
-          <p className="text-lg font-bold">Oskar Petr</p>
+          <p className="text-lg font-bold">{session?.user?.name}</p>
           <p className="text-gray-400 font-bold mt-[-4px]">
-            oskar.petr@outlook.com
+            {session?.user?.email}
           </p>
         </div>
       </Link>
