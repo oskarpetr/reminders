@@ -11,14 +11,20 @@ export default function Home() {
     <Layout project={undefined}>
       <Headline text="Reminders" />
 
-      <div className="flex flex-col gap-4 mt-8">
-        <p className="text-lg font-semibold opacity-50">Recent projects</p>
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-          {projects.map((project) => {
-            return <Project key={project.id} project={project} />;
-          })}
+      {projects.length !== 0 ? (
+        <div className="flex flex-col gap-4 mt-8">
+          <p className="text-lg font-semibold opacity-50">Recent projects</p>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 xl:gap-8">
+            {projects.map((project) => {
+              return <Project key={project.id} project={project} />;
+            })}
+          </div>
         </div>
-      </div>
+      ) : (
+        <p className="text-lg font-semibold opacity-50">
+          No projects were found.
+        </p>
+      )}
     </Layout>
   );
 }
