@@ -39,14 +39,16 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
         href={"/profile"}
         className="flex gap-4 items-center px-6 py-4 bg-white bg-opacity-10 hover:bg-opacity-[15%] transition-all rounded-xl border border-white border-opacity-10"
       >
-        <Image
-          src={session?.user?.image!}
-          alt="Avatar"
-          className="h-12 w-12 rounded-full border border-white border-opacity-10"
-          width={48}
-          height={48}
-          style={{ objectFit: "cover" }}
-        />
+        {session?.user?.image && (
+          <Image
+            src={session.user.image}
+            alt="Avatar"
+            className="h-12 w-12 rounded-full border border-white border-opacity-10"
+            width={48}
+            height={48}
+            style={{ objectFit: "cover" }}
+          />
+        )}
 
         <div>
           <p className="text-lg font-bold">{session?.user?.name}</p>
