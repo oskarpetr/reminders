@@ -27,6 +27,7 @@
     "dns": "^0.2.2",
     "eslint": "8.55.0",
     "eslint-config-next": "14.0.4",
+    "firebase": "^10.7.1",
     "fs": "0.0.1-security",
     "lucide-react": "^0.302.0",
     "mssql": "^10.0.1",

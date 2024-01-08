@@ -1,7 +1,7 @@
 import colorToHex from "@/utils/colors";
 import Icon from "../generic/Icon";
 import Modal from "../generic/Modal";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { DialogClose } from "../ui/Dialog";
 import { useProjects } from "@/context/ProjectsProvider";
 import axios from "axios";
@@ -18,6 +18,13 @@ export default function AddTask({
 
   const createTask = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (name === "") {
+      setErrorName("Task name cannot be empty.");
+      return;
+    }
+
+    setErrorName(undefined);
 
     const res = await axios.post(`/api/projects/${projectId}/tasks`, {
       name: name,
@@ -37,20 +44,25 @@ export default function AddTask({
     });
 
     setProjects(projectsCopy);
+    setOpen(false);
   };
 
   const Trigger = (
     <div
-      className="px-6 py-2 rounded-xl transition-all flex items-center gap-2 hover:bg-white hover:bg-opacity-5 cursor-pointer"
+      className="px-6 py-2 rounded-xl transition-all flex items-center gap-2 hover:bg-white hover:bg-opacity-5"
       style={{ backgroundColor: colorToHex(color) }}
     >
       <Icon icon="Plus" className="text-xl opacity-80" />
-      <p className="font-bold">Add task</p>
+      <p className="font-bold">Task</p>
     </div>
   );
 
   const [name, setName] = useState("");
   const [due, setDue] = useState(new Date());
+
+  const [errorName, setErrorName] = useState<string | undefined>();
+
+  const [open, setOpen] = useState(false);
 
   const Content = (
     <form className="flex flex-col gap-8" onSubmit={createTask}>
@@ -62,6 +74,8 @@ export default function AddTask({
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+
+        {errorName && <p className="text-red-400 font-bold">{errorName}</p>}
       </div>
 
       <div className="flex flex-col gap-4">
@@ -75,17 +89,23 @@ export default function AddTask({
         />
       </div>
 
-      <DialogClose asChild>
-        <button
-          className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
-          type="submit"
-        >
-          Create task
-          <Icon icon="ArrowRight" />
-        </button>
-      </DialogClose>
+      <button
+        className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+        type="submit"
+      >
+        Create task
+        <Icon icon="ArrowRight" />
+      </button>
     </form>
   );
 
-  return <Modal title="Add task" trigger={Trigger} content={Content} />;
+  return (
+    <Modal
+      title="Add task"
+      trigger={Trigger}
+      content={Content}
+      open={open}
+      setOpen={setOpen}
+    />
+  );
 }

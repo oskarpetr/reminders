@@ -27,6 +27,7 @@ const projects: Project[] = [
       },
     ],
     members: [],
+    logs: [],
   },
   {
     id: 2,
@@ -54,6 +55,7 @@ const projects: Project[] = [
       },
     ],
     members: [],
+    logs: [],
   },
 ];
 

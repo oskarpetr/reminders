@@ -2,10 +2,10 @@ import Headline from "@/components/generic/Headline";
 import Project from "../components/project/Project";
 import Layout from "@/components/generic/Layout";
 import { useProjects } from "@/context/ProjectsProvider";
-import { getToken } from "next-auth/jwt";
 
 export default function Home() {
   const { projects } = useProjects();
+  console.log(projects);
 
   return (
     <Layout project={undefined}>

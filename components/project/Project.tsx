@@ -3,6 +3,8 @@ import ProjectIcon from "./ProjectIcon";
 import { Project } from "@/types/Project.types";
 
 export default function Project({ project }: { project: Project }) {
+  const tasksDue = project.tasks.filter((task) => !task.done);
+
   return (
     <Link href={`/projects/${project.id}`}>
       <div className="py-5 px-8 flex justify-between items-center bg-white bg-opacity-5 rounded-2xl border border-white border-opacity-10">
@@ -13,8 +15,7 @@ export default function Project({ project }: { project: Project }) {
             <p className="text-white font-bold text-xl">{project.name}</p>
             {project.tasks.length > 0 ? (
               <p className="text-white font-bold text-opacity-50">
-                {project.tasks.length}{" "}
-                {project.tasks.length === 1 ? "Task" : "Tasks"} due
+                {tasksDue.length} {tasksDue.length === 1 ? "Task" : "Tasks"} due
               </p>
             ) : (
               <p className="text-white font-bold text-opacity-50">No tasks</p>

@@ -25,9 +25,7 @@ export default async function handler(
         await sql`SELECT id FROM project ORDER BY id DESC LIMIT 1`;
       const projectId = searchProjectId.rows[0].id;
 
-      const user =
-        await sql`SELECT id FROM account WHERE email = ${token?.email}`;
-      await sql`INSERT INTO member (project_id, account_id) VALUES (${projectId}, ${user.rows[0].id})`;
+      await sql`INSERT INTO member (project_id, account_id) VALUES (${projectId}, ${token?.sub})`;
 
       return response.status(200).json({ data: { projectId: projectId } });
     } catch (error) {

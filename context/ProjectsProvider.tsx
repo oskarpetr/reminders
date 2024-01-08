@@ -1,4 +1,3 @@
-import projectsData from "@/test-data/projects-data";
 import { Project } from "@/types/Project.types";
 import axios from "axios";
 import { useSession } from "next-auth/react";

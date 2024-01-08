@@ -1,18 +1,10 @@
 import { cn } from "@/utils/cn";
 import colorToHex from "@/utils/colors";
 import { useState } from "react";
-import Icon from "../generic/Icon";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import { useProjects } from "@/context/ProjectsProvider";
 import EditTask from "../modals/EditTask";
 import axios from "axios";
-import { sqlDate } from "@/utils/date";
+import DeleteTask from "../modals/DeleteTask";
 
 export default function Task({
   id,
@@ -34,20 +26,10 @@ export default function Task({
   const [taskDone, setTaskDone] = useState(done);
   const [taskHover, setTaskHover] = useState<number>();
 
-  const editTask = ({
-    newDone,
-    newDue,
-    newName,
-  }: {
-    newDone?: boolean;
-    newDue?: Date;
-    newName?: string;
-  }) => {
+  const editTask = () => {
     axios.patch(`/api/projects/${projectId}/tasks`, {
       id: id,
-      name: newName ?? name,
-      due: sqlDate(newDue ?? due),
-      done: newDone,
+      done: !done,
     });
 
     const projectsCopy = [...projects];
@@ -56,33 +38,7 @@ export default function Task({
       (task) => task.id === id
     );
 
-    if (newDone) {
-      projectsCopy[projectIndex].tasks[taskIndex].done = newDone;
-    }
-
-    if (newDue) {
-      projectsCopy[projectIndex].tasks[taskIndex].due = newDue;
-    }
-
-    if (newName) {
-      projectsCopy[projectIndex].tasks[taskIndex].name = newName;
-    }
-
-    setProjects(projectsCopy);
-  };
-
-  const deleteTask = async () => {
-    await axios.delete(`/api/projects/${projectId}/tasks`, {
-      data: { id: id },
-    });
-
-    const projectsCopy = [...projects];
-    const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
-    const taskIndex = projectsCopy[projectIndex].tasks.findIndex(
-      (task) => task.id === id
-    );
-
-    projectsCopy[projectIndex].tasks.splice(taskIndex, 1);
+    projectsCopy[projectIndex].tasks[taskIndex].done = !done;
 
     setProjects(projectsCopy);
   };
@@ -97,7 +53,7 @@ export default function Task({
       <div
         className="py-4 flex gap-4 items-center cursor-pointer select-none"
         onClick={() => {
-          editTask({ newDone: !done });
+          editTask();
           setTaskDone((prev) => !prev);
         }}
       >
@@ -128,37 +84,22 @@ export default function Task({
         </div>
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Icon
-            icon="DotsThree"
-            className={cn(
-              "opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
-              id === taskHover ? "opacity-100" : "opacity-0"
-            )}
-          />
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent className="w-56 bg-transparent border-none p-0 absolute right-[-1rem]">
-          <div className="bg-neutral-800 border border-gray-700 rounded-xl">
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="p-0">
-                <EditTask taskId={id} name={name} due={due} />
-              </DropdownMenuItem>
-
-              <div className="border-b border-gray-700"></div>
-
-              <DropdownMenuItem
-                className="flex items-center gap-2 px-6 py-3 cursor-pointer"
-                onClick={deleteTask}
-              >
-                <Icon icon="TrashSimple" className="w-4 h-4 opacity-50" />
-                <p className="text-white font-bold text-base">Delete task</p>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex gap-4">
+        <EditTask
+          taskId={id}
+          name={name}
+          due={due}
+          taskHover={taskHover}
+          setTaskHover={setTaskHover}
+          projectId={projectId}
+        />
+        <DeleteTask
+          taskId={id}
+          projectId={projectId}
+          name={name}
+          taskHover={taskHover}
+        />
+      </div>
     </div>
   );
 }

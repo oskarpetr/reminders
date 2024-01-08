@@ -11,6 +11,14 @@ export interface Member {
   email: string;
 }
 
+export interface Log {
+  action: string;
+  task: string;
+  account: string;
+  account_id: number;
+  date: Date;
+}
+
 export interface Project {
   id: number;
   icon: string;
@@ -18,4 +26,5 @@ export interface Project {
   color: string;
   tasks: Task[];
   members: Member[];
+  logs: Log[];
 }

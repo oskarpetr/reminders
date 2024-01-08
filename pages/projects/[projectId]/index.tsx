@@ -10,7 +10,9 @@ import { useProjects } from "@/context/ProjectsProvider";
 import AddTask from "@/components/modals/AddTask";
 import Task from "@/components/project/Task";
 import { sortTasksByDate } from "@/utils/date";
-import Members from "@/components/project/Members";
+import Members from "@/components/modals/Members";
+import EditProject from "@/components/modals/EditProject";
+import Logs from "@/components/modals/Logs";
 
 export default function Project() {
   const { projects } = useProjects();
@@ -28,9 +30,23 @@ export default function Project() {
       <Layout project={project}>
         <Headline
           text={project.name}
-          icon={<AddTask color={project.color} projectId={project.id} />}
+          action={<AddTask color={project.color} projectId={project.id} />}
           color={colorToHex(project.color)}
-          element={<Members members={project.members} />}
+          element={
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-4">
+                <Logs logs={project.logs} />
+                <EditProject
+                  name={project.name}
+                  color={project.color}
+                  icon={project.icon}
+                  projectId={project.id}
+                />
+              </div>
+
+              <Members members={project.members} projectId={project.id} />
+            </div>
+          }
         />
 
         {project.tasks.length !== 0 ? (
