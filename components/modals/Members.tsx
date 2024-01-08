@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Icon from "../generic/Icon";
-import Modal from "../generic/Modal";
+import Modal from "../project/Modal";
 import { cn } from "@/utils/cn";
 import { Member } from "@/types/Project.types";
-import { useSession } from "next-auth/react";
 import axios from "axios";
 import { useProjects } from "@/context/ProjectsProvider";
 import Image from "next/image";
@@ -16,15 +15,20 @@ export default function Members({
   members: Member[];
   projectId: number;
 }) {
+  // projects context
   const { projects, setProjects } = useProjects();
-  const { data: session } = useSession();
+
+  // user hover state
   const [userHover, setUserHover] = useState<number>();
 
+  // edit fields state
   const [newMember, setNewMember] = useState(false);
   const [newMemberEmail, setNewMemberEmail] = useState("");
 
+  // error states
   const [error, setError] = useState<string | undefined>();
 
+  // add member
   const addMember = async () => {
     if (newMemberEmail === "") {
       setError("New member email cannot be empty.");
@@ -61,6 +65,7 @@ export default function Members({
     }
   };
 
+  // remove member
   const removeMember = async (id: number) => {
     await axios.delete(`/api/projects/${projectId}/members`, {
       data: {

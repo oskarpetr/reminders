@@ -1,24 +1,29 @@
 import Headline from "@/components/generic/Headline";
 import Layout from "@/components/generic/Layout";
-import { getUserId } from "@/utils/avatar";
+import { getAvatar } from "@/utils/avatar";
 import axios from "axios";
-import { getCsrfToken, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 export default function Profile() {
-  const { data: session, update } = useSession();
+  // session context
+  const { data: session } = useSession();
 
+  // fields states
   const [name, setName] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [file, setFile] = useState<File>();
   const [avatar, setAvatar] = useState<string>();
 
+  // error states
   const [errorName, setErrorName] = useState<string | undefined>();
   const [errorEmail, setErrorEmail] = useState<string | undefined>();
 
+  // avatar ref
   const avatarRef = useRef<HTMLInputElement>(null);
 
+  // edit profile
   const editProfile = async () => {
     if (name === "") {
       setErrorName("Name cannot be empty.");
@@ -43,7 +48,9 @@ export default function Profile() {
     setErrorEmail(undefined);
 
     await axios.patch(
-      `/api/accounts/${getUserId(session?.user?.image!)}/general`,
+      `/api/accounts/${getAvatar(
+        parseInt(session?.user?.id as string)
+      )}/general`,
       {
         name: name,
         email: email,
@@ -51,20 +58,26 @@ export default function Profile() {
     );
   };
 
+  // convert file to base 64 string
   useEffect(() => {
-    if (file) {
-      getBase64(file);
-    }
+    if (file) getBase64(file);
   }, [file]);
 
+  // change avatar
   useEffect(() => {
     if (avatar) {
-      axios.patch(`/api/accounts/${getUserId(session?.user?.image!)}/avatar`, {
-        avatar: avatar,
-      });
+      axios.patch(
+        `/api/accounts/${getAvatar(
+          parseInt(session?.user?.id as string)
+        )}/avatar`,
+        {
+          avatar: avatar,
+        }
+      );
     }
   }, [avatar]);
 
+  // file to base 64 string
   function getBase64(file: File) {
     var reader = new FileReader();
 
@@ -74,6 +87,7 @@ export default function Profile() {
     };
   }
 
+  // set new name and email
   useEffect(() => {
     if (session?.user) {
       setName(session.user.name!);

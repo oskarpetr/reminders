@@ -1,14 +1,11 @@
-import colorToHex, { colors } from "@/utils/colors";
 import Icon from "../generic/Icon";
-import Modal from "../generic/Modal";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import { cn } from "@/utils";
-import icons from "@/utils/icons";
+import Modal from "../project/Modal";
+import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { SelectIcon } from "../project/SelectIcon";
 import { SelectColor } from "../project/SelectColor";
+import DeleteProject from "./DeleteProject";
 
 export default function EditProject({
   name,
@@ -21,8 +18,10 @@ export default function EditProject({
   icon: string;
   projectId: number;
 }) {
+  // projects context
   const { projects, setProjects } = useProjects();
 
+  // edit project
   const editProject = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -73,6 +72,7 @@ export default function EditProject({
     />
   );
 
+  // edit fields states
   const [editName, setEditName] = useState(name);
   const [editSelectedColor, setEditSelectedColor] = useState<
     string | undefined
@@ -81,10 +81,12 @@ export default function EditProject({
     icon
   );
 
+  // error states
   const [errorName, setErrorName] = useState<string | undefined>();
   const [errorColor, setErrorColor] = useState<string | undefined>();
   const [errorIcon, setErrorIcon] = useState<string | undefined>();
 
+  // modal state
   const [open, setOpen] = useState(false);
 
   const Content = (
@@ -136,7 +138,8 @@ export default function EditProject({
 
   return (
     <Modal
-      title="Edit project"
+      title="Settings"
+      action={<DeleteProject name={name} projectId={projectId} />}
       trigger={Trigger}
       content={Content}
       open={open}

@@ -21,11 +21,16 @@ export default function Task({
   done: boolean;
   projectId: number;
 }) {
+  // projects context
   const { projects, setProjects } = useProjects();
 
+  // task done state
   const [taskDone, setTaskDone] = useState(done);
+
+  // task hover state
   const [taskHover, setTaskHover] = useState<number>();
 
+  // edit task
   const editTask = () => {
     axios.patch(`/api/projects/${projectId}/tasks`, {
       id: id,

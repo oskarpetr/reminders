@@ -13,16 +13,31 @@ import { sortTasksByDate } from "@/utils/date";
 import Members from "@/components/modals/Members";
 import EditProject from "@/components/modals/EditProject";
 import Logs from "@/components/modals/Logs";
+import { useEffect } from "react";
 
 export default function Project() {
+  // projects context
   const { projects } = useProjects();
 
-  let { projectId } = useParams() ?? { projectId: 1 };
-  const routerReady = useRouter().isReady;
+  // router
+  const router = useRouter();
 
-  const project = projects!.find(
+  // project id
+  let { projectId } = useParams() ?? { projectId: 1 };
+
+  // router ready
+  const routerReady = router.isReady;
+
+  // find project
+  const project = projects.find(
     (project) => project.id === parseInt(projectId as string)
   );
+
+  useEffect(() => {
+    if (router.isReady && !project) {
+      router.push("/");
+    }
+  }, [router.isReady]);
 
   return (
     routerReady &&

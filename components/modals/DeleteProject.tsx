@@ -2,53 +2,49 @@ import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
 import { DialogClose } from "../ui/Dialog";
 import { useProjects } from "@/context/ProjectsProvider";
-import { cn } from "@/utils";
 import axios from "axios";
+import { useRouter } from "next/router";
 
-export default function DeleteTask({
-  taskId,
+export default function DeleteProject({
   projectId,
-  taskHover,
   name,
 }: {
-  taskId: number;
   projectId: number;
-  taskHover: number | undefined;
   name: string;
 }) {
   // projects context
   const { projects, setProjects } = useProjects();
 
+  // router
+  const router = useRouter();
+
   // delete task
   const deleteTask = async () => {
-    await axios.delete(`/api/projects/${projectId}/tasks`, {
-      data: { id: taskId },
-    });
+    console.log("s");
+    const res = await axios.delete(`/api/projects/${projectId}`);
+
     console.log("s");
     const projectsCopy = [...projects];
     const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
-    const taskIndex = projectsCopy[projectIndex].tasks.findIndex(
-      (task) => task.id === taskId
-    );
 
-    projectsCopy[projectIndex].tasks.splice(taskIndex, 1);
+    projectsCopy.splice(projectIndex, 1);
     setProjects(projectsCopy);
+
+    console.log("s");
+    router.push("/");
   };
 
   const Trigger = (
-    <Icon
-      icon="TrashSimple"
-      className={cn(
-        "opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
-        taskId === taskHover ? "opacity-50" : "opacity-0"
-      )}
-    />
+    <button className="px-6 py-2 rounded-xl transition-all flex items-center gap-2 bg-white bg-opacity-10 hover:bg-white hover:bg-opacity-20">
+      <Icon icon="TrashSimple" className="text-xl opacity-80" />
+      <p className="font-bold">Delete</p>
+    </button>
   );
 
   const Content = (
     <div className="flex flex-col gap-8">
       <p className="opacity-50">
-        Do you want to really delete the task &quot;
+        Do you want to really delete the project &quot;
         <span className="font-bold">{name}</span>&quot;? Be careful, this action
         cannot be reverted.
       </p>
@@ -69,7 +65,7 @@ export default function DeleteTask({
             onClick={deleteTask}
             type="submit"
           >
-            Delete task
+            Delete project
             <Icon icon="ArrowRight" />
           </button>
         </DialogClose>
@@ -77,5 +73,5 @@ export default function DeleteTask({
     </div>
   );
 
-  return <Modal title="Delete task" trigger={Trigger} content={Content} />;
+  return <Modal title="Delete project" trigger={Trigger} content={Content} />;
 }

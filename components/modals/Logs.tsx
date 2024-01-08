@@ -1,11 +1,9 @@
-import { Log } from "@/types/Project.types";
+import { Log as LogType } from "@/types/Project.types";
 import Icon from "../generic/Icon";
-import Modal from "../generic/Modal";
-import Image from "next/image";
-import { getAvatar } from "@/utils/avatar";
-import { Action, getAction } from "@/utils/log";
+import Modal from "../project/Modal";
+import Log from "../generic/Log";
 
-export default function Logs({ logs }: { logs: Log[] }) {
+export default function Logs({ logs }: { logs: LogType[] }) {
   const Trigger = (
     <Icon
       icon="ArrowClockwise"
@@ -28,38 +26,4 @@ export default function Logs({ logs }: { logs: Log[] }) {
   );
 
   return <Modal title="Logs" trigger={Trigger} content={Content} />;
-}
-
-function Log({ log, last }: { log: Log; last: boolean }) {
-  return (
-    <div>
-      <div key={log.date.toString()} className="flex gap-4 items-center">
-        <Image
-          src={getAvatar(log.account_id)}
-          alt="Avatar"
-          width={48}
-          height={48}
-          className="w-12 h-12 rounded-full"
-          style={{ objectFit: "cover" }}
-        />
-
-        <div>
-          <p className="font-bold opacity-50 text-sm">
-            {new Date(log.date).toLocaleString()}
-          </p>
-          <p className="tracking-wide">
-            <span className="font-bold">{log.account}</span>{" "}
-            <span className="opacity-75">
-              {getAction(log.action as Action)}
-            </span>{" "}
-            <span className="font-bold">&quot;{log.task}&quot;</span>.
-          </p>
-        </div>
-      </div>
-
-      {!last && (
-        <div className="border border-white border-opacity-5 my-4"></div>
-      )}
-    </div>
-  );
 }

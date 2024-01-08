@@ -8,11 +8,16 @@ import AddProject from "../modals/AddProject";
 import { useProjects } from "@/context/ProjectsProvider";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import { getAvatar } from "@/utils/avatar";
 
 export default function Sidebar({ project }: { project: Project | undefined }) {
+  // projects context
   const { projects } = useProjects();
+
+  // session context
   const { data: session } = useSession();
 
+  // menu
   const menu = [
     {
       name: "Home",
@@ -31,7 +36,11 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
     },
   ];
 
+  // sidebar path
   const path = useRouter().pathname;
+
+  // user id
+  const userId = session?.user?.id;
 
   return (
     <div className="w-[25rem] h-screen bg-white bg-opacity-5 fixed px-10 py-20 flex flex-col border-r border-white border-opacity-10">
@@ -39,16 +48,14 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
         href={"/profile"}
         className="flex gap-4 items-center px-6 py-4 bg-white bg-opacity-10 hover:bg-opacity-[15%] transition-all rounded-xl border border-white border-opacity-10"
       >
-        {session?.user?.image && (
-          <Image
-            src={session.user.image}
-            alt="Avatar"
-            className="h-12 w-12 rounded-full border border-white border-opacity-10"
-            width={48}
-            height={48}
-            style={{ objectFit: "cover" }}
-          />
-        )}
+        <Image
+          src={getAvatar(parseInt(userId as string))}
+          alt="Avatar"
+          className="h-12 w-12 rounded-full border border-white border-opacity-10"
+          width={48}
+          height={48}
+          style={{ objectFit: "cover" }}
+        />
 
         <div>
           <p className="text-lg font-bold">{session?.user?.name}</p>

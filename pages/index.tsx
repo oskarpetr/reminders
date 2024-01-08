@@ -4,8 +4,8 @@ import Layout from "@/components/generic/Layout";
 import { useProjects } from "@/context/ProjectsProvider";
 
 export default function Home() {
+  // projects context
   const { projects } = useProjects();
-  console.log(projects);
 
   return (
     <Layout project={undefined}>

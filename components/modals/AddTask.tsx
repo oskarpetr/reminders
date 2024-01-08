@@ -1,8 +1,7 @@
 import colorToHex from "@/utils/colors";
 import Icon from "../generic/Icon";
-import Modal from "../generic/Modal";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { DialogClose } from "../ui/Dialog";
+import Modal from "../project/Modal";
+import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
 import axios from "axios";
 import { sqlDate } from "@/utils/date";
@@ -14,8 +13,10 @@ export default function AddTask({
   color: string;
   projectId: number;
 }) {
+  // projects context
   const { projects, setProjects } = useProjects();
 
+  // create task
   const createTask = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -57,11 +58,14 @@ export default function AddTask({
     </div>
   );
 
+  // fields state
   const [name, setName] = useState("");
   const [due, setDue] = useState(new Date());
 
+  // name error state
   const [errorName, setErrorName] = useState<string | undefined>();
 
+  // modal state
   const [open, setOpen] = useState(false);
 
   const Content = (

@@ -1,10 +1,6 @@
-import colorToHex, { colors } from "@/utils/colors";
 import Icon from "../generic/Icon";
-import Modal from "../generic/Modal";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import { cn } from "@/utils";
-import icons from "@/utils/icons";
-import { DialogClose } from "../ui/Dialog";
+import Modal from "../project/Modal";
+import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -12,9 +8,13 @@ import { SelectIcon } from "../project/SelectIcon";
 import { SelectColor } from "../project/SelectColor";
 
 export default function AddProject() {
+  // projects context
   const { projects, setProjects } = useProjects();
+
+  // router
   const router = useRouter();
 
+  // create project
   const createProject = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -71,14 +71,17 @@ export default function AddProject() {
     </div>
   );
 
+  // fields states
   const [name, setName] = useState("");
   const [selectedColor, setSelectedColor] = useState<string>();
   const [selectedIcon, setSelectedIcon] = useState<string>();
 
+  // error states
   const [errorName, setErrorName] = useState<string | undefined>();
   const [errorColor, setErrorColor] = useState<string | undefined>();
   const [errorIcon, setErrorIcon] = useState<string | undefined>();
 
+  // modal state
   const [open, setOpen] = useState(false);
 
   const Content = (

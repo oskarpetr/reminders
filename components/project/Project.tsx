@@ -22,21 +22,6 @@ export default function Project({ project }: { project: Project }) {
             )}
           </div>
         </div>
-
-        {/* <div className="flex">
-          {project.users.map((user, index) => {
-            return (
-              <div
-                key={user}
-                className="w-8 h-8 bg-neutral-700 rounded-full border border-white border-opacity-10"
-                style={{
-                  marginRight:
-                    index !== project.users.length - 1 ? "-10px" : "0px",
-                }}
-              ></div>
-            );
-          })}
-        </div> */}
       </div>
     </Link>
   );

@@ -11,6 +11,7 @@ export default async function handler(
   const { projectId } = request.query;
   const token = await getToken({ req: request, secret });
 
+  // create task
   if (request.method === "POST") {
     try {
       const body: {
@@ -19,29 +20,38 @@ export default async function handler(
         done: boolean;
       } = request.body;
 
+      // create task
       await sql`INSERT INTO task (name, due, done, project_id) VALUES (${
         body.name
       }, ${body.due}, ${body.done}, ${projectId?.toString()});`;
-      const taskData = await sql`SELECT id FROM task ORDER BY id DESC LIMIT 1`;
-      const taskId = taskData.rows[0].id;
 
+      // get new task's id
+      const getTaskId = await sql`SELECT id FROM task ORDER BY id DESC LIMIT 1`;
+      const taskId = getTaskId.rows[0].id;
+
+      // create log
       await sql`INSERT INTO log (account_id, project_id, task_id, action) VALUES (${
         token?.sub
       }, ${projectId?.toString()}, ${taskId}, 'TASK-CREATED')`;
 
-      return response.status(200).json({ data: { taskId: taskId } });
+      return response.status(200).json({ data: { taskId } });
     } catch (error) {
       return response.status(500).json({ error });
     }
+
+    // get tasks by project id
   } else if (request.method === "GET") {
     try {
-      const data =
+      // get tasks
+      const tasks =
         await sql`SELECT task.id, task.name, task.due, task.done FROM task INNER JOIN project ON project.id = task.project_id WHERE task.project_id = ${projectId?.toString()}`;
 
-      return response.status(200).json({ data: data.rows });
+      return response.status(200).json({ data: tasks.rows });
     } catch (error) {
       return response.status(500).json({ error });
     }
+
+    // update task
   } else if (request.method === "PATCH") {
     try {
       const body: {
@@ -51,42 +61,59 @@ export default async function handler(
         done?: boolean;
       } = request.body;
 
+      // if done property exists
       if (body.done !== undefined) {
+        // update task's done
         await sql`UPDATE task SET done = ${body.done} WHERE id = ${body.id}`;
 
+        // create log
         const completedText = body.done ? "TASK-COMPLETED" : "TASK-UNCOMPLETED";
         await sql`INSERT INTO log (account_id, project_id, task_id, action) VALUES (${
           token?.sub
         }, ${projectId?.toString()}, ${body.id}, ${completedText})`;
       }
 
+      // if name property exists
       if (body.name !== undefined) {
+        // update task's name
         await sql`UPDATE task SET name = ${body.name} WHERE id = ${body.id}`;
-        console.log("renamed");
+
+        // create log
         await sql`INSERT INTO log (account_id, project_id, task_id, action) VALUES (${
           token?.sub
         }, ${projectId?.toString()}, ${body.id}, 'TASK-RENAMED')`;
       }
 
+      // if due property exists
       if (body.due !== undefined) {
+        // update task's due
         await sql`UPDATE task SET due = ${body.due} WHERE id = ${body.id}`;
+
+        // create log
         await sql`INSERT INTO log (account_id, project_id, task_id, action) VALUES (${
           token?.sub
         }, ${projectId?.toString()}, ${body.id}, 'TASK-DUE')`;
       }
 
-      return response.status(200);
+      return response.status(200).json({});
     } catch (error) {
       return response.status(500).json({ error });
     }
+
+    // delete task
   } else if (request.method === "DELETE") {
     try {
       const body: {
         id: number;
       } = request.body;
-      const data = await sql`DELETE FROM task WHERE id = ${body.id}`;
 
-      return response.status(200).json({ data: data });
+      // delete logs
+      await sql`DELETE FROM log WHERE task_id = ${body.id}`;
+
+      // delete task
+      await sql`DELETE FROM task WHERE id = ${body.id}`;
+
+      return response.status(200).json({});
     } catch (error) {
       return response.status(500).json({ error });
     }

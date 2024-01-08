@@ -1,7 +1,6 @@
 import Icon from "../generic/Icon";
-import Modal from "../generic/Modal";
+import Modal from "../project/Modal";
 import { Dispatch, SetStateAction, useState } from "react";
-import { DialogClose } from "../ui/Dialog";
 import { useProjects } from "@/context/ProjectsProvider";
 import { cn } from "@/utils";
 import axios from "axios";
@@ -22,8 +21,10 @@ export default function EditTask({
   taskHover: number | undefined;
   setTaskHover: Dispatch<SetStateAction<number | undefined>>;
 }) {
+  // projects context
   const { projects, setProjects } = useProjects();
 
+  // edit task
   const editTask = () => {
     if (editName === "") {
       setErrorName("Task name cannot be empty.");
@@ -74,11 +75,14 @@ export default function EditTask({
     />
   );
 
+  // edit fields states
   const [editName, setEditName] = useState(name);
   const [editDue, setEditDue] = useState(due);
 
+  // error states
   const [errorName, setErrorName] = useState<string | undefined>();
 
+  // modal state
   const [open, setOpen] = useState(false);
 
   const Content = (

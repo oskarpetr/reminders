@@ -7,20 +7,25 @@ export default async function handler(
 ) {
   const { projectId } = request.query;
 
+  // get project
   if (request.method === "GET") {
     try {
+      // get project
       const project =
         await sql`SELECT * FROM project WHERE project.id = ${projectId?.toString()}`;
 
+      // get tasks
       const tasks =
         await sql`SELECT task.id, task.name, task.due, task.done FROM task INNER JOIN project ON project.id = task.project_id WHERE task.project_id = ${projectId?.toString()}`;
 
+      // get members
       const members =
         await sql`SELECT account.id, account.name, account.email FROM account
             INNER JOIN member ON member.account_id = account.id
             INNER JOIN project ON project.id = member.project_id
             WHERE project.id = ${projectId?.toString()}`;
 
+      // get logs
       const logs =
         await sql`SELECT log.action, task.name as task, account.name as account, log.date, log.account_id as account_id FROM log
             INNER JOIN project ON project.id = log.project_id
@@ -39,6 +44,8 @@ export default async function handler(
     } catch (error) {
       return response.status(500).json({ error });
     }
+
+    // update project
   } else if (request.method === "PATCH") {
     try {
       const body: {
@@ -47,10 +54,32 @@ export default async function handler(
         icon: boolean;
       } = request.body;
 
-      const data = await sql`UPDATE project SET name = ${body.name}, color = ${
+      // update project
+      await sql`UPDATE project SET name = ${body.name}, color = ${
         body.color
       }, icon = ${body.icon} WHERE id = ${projectId?.toString()}`;
-      return response.status(200).json({ data: data });
+
+      return response.status(200).json({});
+    } catch (error) {
+      return response.status(500).json({ error });
+    }
+
+    // delete project
+  } else if (request.method === "DELETE") {
+    try {
+      // delete logs
+      await sql`DELETE FROM log WHERE project_id = ${projectId?.toString()}`;
+
+      // delete tasks
+      await sql`DELETE FROM task WHERE project_id = ${projectId?.toString()}`;
+
+      // delete members
+      await sql`DELETE FROM member WHERE project_id = ${projectId?.toString()}`;
+
+      // delete project
+      await sql`DELETE FROM project WHERE id = ${projectId?.toString()}`;
+
+      return response.status(200).json({});
     } catch (error) {
       return response.status(500).json({ error });
     }

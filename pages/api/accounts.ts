@@ -7,6 +7,7 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  // create account
   if (request.method === "POST") {
     try {
       const body: {
@@ -16,32 +17,29 @@ export default async function handler(
         avatar: string;
       } = request.body;
 
-      const emailUser =
+      // get email
+      const emailInUse =
         await sql`SELECT COUNT(*) FROM account WHERE email = ${body.email}`;
 
-      if (parseInt(emailUser.rows[0].count) === 1) {
+      // if email already exists
+      if (parseInt(emailInUse.rows[0].count) === 1) {
         return response.status(409).json({ error: "Email already in use." });
       }
 
-      const data =
-        await sql`INSERT INTO account (name, email, password) VALUES (${body.name}, ${body.email}, ${body.password})`;
+      // create account
+      await sql`INSERT INTO account (name, email, password) VALUES (${body.name}, ${body.email}, ${body.password})`;
 
-      const user =
+      // get new user's id
+      const getUserId =
         await sql`SELECT id FROM account WHERE email = ${body.email}`;
 
-      const storageRef = ref(storage, `avatars/${user.rows[0].id}`);
+      // upload avatar
+      const storageRef = ref(storage, `avatars/${getUserId.rows[0].id}`);
       await uploadString(storageRef, body.avatar, "data_url");
 
-      return response.status(200).json({ data });
+      return response.status(200).json({});
     } catch (error) {
       return response.status(500).json({ error });
     }
-  } else if (request.method === "GET") {
-    // try {
-    //   const data = await sql`SELECT * FROM project`;
-    //   return response.status(200).json({ data: data.rows });
-    // } catch (error) {
-    //   return response.status(500).json({ error });
-    // }
   }
 }

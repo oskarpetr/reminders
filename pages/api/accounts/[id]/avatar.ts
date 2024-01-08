@@ -8,16 +8,18 @@ export default async function handler(
 ) {
   const { id } = request.query;
 
+  // update avatar
   if (request.method === "PATCH") {
     try {
       const body: {
         avatar: string;
       } = request.body;
 
+      // upload avatar
       const storageRef = ref(storage, `avatars/${id}`);
       await uploadString(storageRef, body.avatar, "data_url");
 
-      return response.status(200).json({});
+      return response.status(200);
     } catch (error) {
       return response.status(500).json({ error });
     }

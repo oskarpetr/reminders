@@ -7,6 +7,7 @@ export default async function handler(
 ) {
   const { id } = request.query;
 
+  // update account
   if (request.method === "PATCH") {
     try {
       const body: {
@@ -14,11 +15,12 @@ export default async function handler(
         email: string;
       } = request.body;
 
-      const user = await sql`UPDATE account SET name = ${body.name}, email = ${
+      // update account
+      await sql`UPDATE account SET name = ${body.name}, email = ${
         body.email
       } WHERE id = ${id?.toString()}`;
 
-      return response.status(200).json({ user });
+      return response.status(200);
     } catch (error) {
       return response.status(500).json({ error });
     }

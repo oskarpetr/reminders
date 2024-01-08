@@ -5,24 +5,26 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import bcrypt from "bcryptjs-react";
 import Link from "next/link";
-import { getStorage, ref, uploadString } from "firebase/storage";
-import { storage } from "@/utils/firebase";
 
 export default function SignIn() {
+  // fields states
   const [file, setFile] = useState<File>();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState("");
 
+  // error states
   const [errorName, setErrorName] = useState<string | undefined>();
   const [errorEmail, setErrorEmail] = useState<string | undefined>();
   const [errorPassword, setErrorPassword] = useState<string | undefined>();
   const [errorFile, setErrorFile] = useState<string | undefined>();
 
+  // router
   const router = useRouter();
 
-  const signUp = async (e: FormEvent) => {
+  // register
+  const register = async (e: FormEvent) => {
     e.preventDefault();
 
     if (file === undefined) {
@@ -83,12 +85,12 @@ export default function SignIn() {
     router.push("/sign-in");
   };
 
+  // convert file to base 64 string
   useEffect(() => {
-    if (file) {
-      getBase64(file);
-    }
+    if (file) getBase64(file);
   }, [file]);
 
+  // file to base 64 string
   function getBase64(file: File) {
     var reader = new FileReader();
 
@@ -103,7 +105,7 @@ export default function SignIn() {
       <div className="w-[30rem] bg-white bg-opacity-10 border border-white border-opacity-10 px-16 py-8 rounded-xl">
         <Headline text="Sign up" />
 
-        <form className="flex flex-col gap-8" onSubmit={signUp}>
+        <form className="flex flex-col gap-8" onSubmit={register}>
           <div className="flex flex-col gap-2">
             <p className="font-bold">Avatar</p>
 
@@ -185,7 +187,6 @@ export default function SignIn() {
 
           <button
             className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
-            onClick={signUp}
             type="submit"
           >
             Sign up

@@ -3,17 +3,21 @@ import Icon from "@/components/generic/Icon";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 
 export default function SignIn() {
+  // router
   const router = useRouter();
 
+  // fields states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // error states
   const [errorEmail, setErrorEmail] = useState<string | undefined>();
   const [errorPassword, setErrorPassword] = useState<string | undefined>();
 
+  // log in
   const logIn = async (e: FormEvent) => {
     e.preventDefault();
 
