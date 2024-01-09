@@ -22,7 +22,7 @@ export default function AddTask({
 
   // fields state
   const [name, setName] = useState("");
-  const [due, setDue] = useState(new Date());
+  const [due, setDue] = useState<Date | undefined>(new Date());
 
   // name error state
   const [errorName, setErrorName] = useState<string | undefined>();
@@ -33,7 +33,7 @@ export default function AddTask({
   // query
   const { refetch, isLoading } = useQuery({
     queryKey: ["add-task"],
-    queryFn: () => fetchCreateTask({ projectId, name, due }),
+    queryFn: () => fetchCreateTask({ projectId, name, due: due! }),
     enabled: false,
   });
 
@@ -58,7 +58,7 @@ export default function AddTask({
       projectId,
       taskId: res.data?.data.data.taskId,
       name,
-      due,
+      due: due!,
     });
 
     setOpen(false);

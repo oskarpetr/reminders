@@ -32,7 +32,7 @@ export default function EditTask({
 
   // edit fields states
   const [editName, setEditName] = useState(name);
-  const [editDue, setEditDue] = useState(due);
+  const [editDue, setEditDue] = useState<Date | undefined>(due);
   const [editObj, setEditObj] = useState<{
     id: number;
     name: string;
@@ -69,7 +69,7 @@ export default function EditTask({
 
     setErrorName(undefined);
 
-    if (sqlDate(due) === sqlDate(editDue) && name === editName) {
+    if (sqlDate(due) === sqlDate(editDue!) && name === editName) {
       setTaskHover(undefined);
       setOpen(false);
       return;
@@ -81,15 +81,22 @@ export default function EditTask({
       edit.name = editName;
     }
 
-    if (sqlDate(due) !== sqlDate(editDue)) {
-      edit.due = sqlDate(editDue);
+    if (sqlDate(due) !== sqlDate(editDue!)) {
+      edit.due = sqlDate(editDue!);
     }
 
     setEditObj(edit);
 
     await refetch();
 
-    uiEditTask({ projects, setProjects, projectId, taskId, editName, editDue });
+    uiEditTask({
+      projects,
+      setProjects,
+      projectId,
+      taskId,
+      editName,
+      editDue: editDue!,
+    });
 
     setTaskHover(undefined);
     setOpen(false);
@@ -128,7 +135,7 @@ export default function EditTask({
               <Icon icon="CalendarBlank" className="opacity-50" />
               {due ? (
                 <p className="text-neutral-300">
-                  {format(editDue, "dd/MM/yyyy")}
+                  {format(editDue!, "dd/MM/yyyy")}
                 </p>
               ) : (
                 <p>Pick a date</p>
