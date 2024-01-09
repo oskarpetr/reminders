@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import ProjectsProvider from "@/context/ProjectsProvider";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function App({
   Component,
@@ -18,6 +19,7 @@ export default function App({
         <ProjectsProvider>
           <SkeletonTheme baseColor="#303030" highlightColor="#3d3d3d">
             <Component {...pageProps} />
+            <Analytics />
           </SkeletonTheme>
         </ProjectsProvider>
       </QueryClientProvider>

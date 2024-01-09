@@ -1,4 +1,4 @@
-import { cn } from "@/utils";
+import { cn } from "@/utils/cn";
 import { colors } from "@/utils/colors";
 import { Dispatch, SetStateAction } from "react";
 import Icon from "../generic/Icon";

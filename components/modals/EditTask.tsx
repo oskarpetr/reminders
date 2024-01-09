@@ -2,8 +2,6 @@ import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
-import { cn } from "@/utils";
-import axios from "axios";
 import { sqlDate } from "@/utils/date";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { format } from "date-fns";
@@ -11,6 +9,7 @@ import { Calendar } from "../ui/calendar";
 import { useQuery } from "@tanstack/react-query";
 import { uiEditTask } from "@/utils/ui-update";
 import { fetchEditTask } from "@/utils/fetchers";
+import { cn } from "@/utils/cn";
 
 export default function EditTask({
   taskId,
@@ -115,7 +114,7 @@ export default function EditTask({
   const Content = (
     <form className="flex flex-col gap-8" onSubmit={editTask}>
       <div className="flex flex-col gap-4">
-        <p className="font-bold ">Task name</p>
+        <p className="font-bold">Task name</p>
         <input
           className="bg-white bg-opacity-10 border border-white border-opacity-10 rounded-xl px-6 py-2 focus:outline-none font-bold text-neutral-300"
           placeholder="Enter name"

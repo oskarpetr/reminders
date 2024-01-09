@@ -2,7 +2,6 @@ import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
 import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
-import axios from "axios";
 import { SelectIcon } from "../project/SelectIcon";
 import { SelectColor } from "../project/SelectColor";
 import DeleteProject from "./DeleteProject";
