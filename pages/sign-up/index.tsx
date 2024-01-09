@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import bcrypt from "bcryptjs-react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCreateAccount } from "@/utils/fetchers";
 
 export default function SignIn() {
   // fields states
@@ -13,6 +15,7 @@ export default function SignIn() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [encryptedPassword, setEncryptedPassword] = useState("");
 
   // error states
   const [errorName, setErrorName] = useState<string | undefined>();
@@ -23,9 +26,19 @@ export default function SignIn() {
   // router
   const router = useRouter();
 
+  // query
+  const { refetch, isLoading } = useQuery({
+    queryKey: ["add-project"],
+    queryFn: () =>
+      fetchCreateAccount({ name, email, encryptedPassword, avatar }),
+    enabled: false,
+  });
+
   // register
   const register = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (isLoading) return;
 
     if (file === undefined) {
       setErrorFile("Select an avatar.");
@@ -63,23 +76,15 @@ export default function SignIn() {
 
     setErrorPassword(undefined);
 
-    const encryptedPassword = await bcrypt.hashSync(
-      password,
-      bcrypt.genSaltSync(10)
+    setEncryptedPassword(
+      await bcrypt.hashSync(password, bcrypt.genSaltSync(10))
     );
 
-    try {
-      await axios.post(`/api/accounts`, {
-        name: name,
-        email: email,
-        password: encryptedPassword,
-        avatar: avatar,
-      });
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setErrorEmail("Email already in use.");
-        return;
-      }
+    const res = await refetch();
+
+    if (axios.isAxiosError(res.error) && res.error.response?.status === 409) {
+      setErrorEmail("Email already in use.");
+      return;
     }
 
     router.push("/sign-in");
@@ -186,11 +191,16 @@ export default function SignIn() {
           </div>
 
           <button
-            className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+            className="py-2 bg-neutral-600 disabled:bg-neutral-700 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+            disabled={isLoading}
             type="submit"
           >
             Sign up
-            <Icon icon="ArrowRight" />
+            {isLoading ? (
+              <Icon icon="Spinner" className="animate-spin text-lg" />
+            ) : (
+              <Icon icon="ArrowRight" />
+            )}
           </button>
         </form>
       </div>

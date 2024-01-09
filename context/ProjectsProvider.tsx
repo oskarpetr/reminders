@@ -11,48 +11,63 @@ import {
   useState,
 } from "react";
 
+// projects context type
 interface ProjectsContextType {
   projects: Project[];
   setProjects: Dispatch<SetStateAction<Project[]>>;
+  loading: boolean;
 }
 
+// projects context
 const ProjectsContext = createContext<ProjectsContextType>({
   projects: [],
   setProjects: () => {},
+  loading: true,
 });
 
+// fetch projects
+async function fetchProjects(email: string) {
+  const res = await axios.get("/api/projects", {
+    headers: { Authorization: email },
+  });
+
+  const data: Project[] = res.data.data;
+
+  let projects: Project[] = [];
+  for (let project of data) {
+    const res = await axios.get(`/api/projects/${project.id}`);
+    projects.push(res.data.data);
+  }
+
+  return projects;
+}
+
+// projects provider
 export default function ProjectsProvider({ children }: PropsWithChildren) {
   const [projects, setProjects] = useState<Project[]>([]);
-  const { data: session } = useSession();
+  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    async function fetchProjects() {
-      const res = await axios.get("/api/projects", {
-        headers: { Authorization: session?.user?.email },
-      });
-      const data: Project[] = res.data.data;
-
-      let projs: Project[] = [];
-      for (let proj of data) {
-        const res = await axios.get(`/api/projects/${proj.id}`);
-        projs.push(res.data.data);
-      }
-
-      setProjects(projs);
+    async function getProjects(email: string) {
+      const projects = await fetchProjects(email);
+      setProjects(projects);
     }
 
-    fetchProjects();
-  }, []);
+    if (status === "authenticated" || projects === undefined) {
+      getProjects(session?.user.email!);
+      setLoading(false);
+    }
+  }, [status]);
 
   return (
-    <ProjectsContext.Provider
-      value={{ projects: projects, setProjects: setProjects }}
-    >
+    <ProjectsContext.Provider value={{ projects, setProjects, loading }}>
       {children}
     </ProjectsContext.Provider>
   );
 }
 
+// use projects hook
 export const useProjects = () => {
   return useContext(ProjectsContext);
 };

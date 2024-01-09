@@ -1,9 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
 import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
-import { DialogClose } from "../ui/Dialog";
+import { DialogClose } from "../ui/dialog";
 import { useProjects } from "@/context/ProjectsProvider";
 import { cn } from "@/utils";
 import axios from "axios";
+import { fetchDeleteTask } from "@/utils/fetchers";
+import { uiDeleteTask } from "@/utils/ui-update";
+import { FormEvent } from "react";
 
 export default function DeleteTask({
   taskId,
@@ -19,20 +23,22 @@ export default function DeleteTask({
   // projects context
   const { projects, setProjects } = useProjects();
 
-  // delete task
-  const deleteTask = async () => {
-    await axios.delete(`/api/projects/${projectId}/tasks`, {
-      data: { id: taskId },
-    });
-    console.log("s");
-    const projectsCopy = [...projects];
-    const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
-    const taskIndex = projectsCopy[projectIndex].tasks.findIndex(
-      (task) => task.id === taskId
-    );
+  // query
+  const { refetch, isLoading } = useQuery({
+    queryKey: ["delete-task"],
+    queryFn: () => fetchDeleteTask({ projectId, taskId }),
+    enabled: false,
+  });
 
-    projectsCopy[projectIndex].tasks.splice(taskIndex, 1);
-    setProjects(projectsCopy);
+  // delete task
+  const deleteTask = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (isLoading) return;
+
+    await refetch();
+
+    uiDeleteTask({ projects, setProjects, projectId, taskId });
   };
 
   const Trigger = (
@@ -46,7 +52,7 @@ export default function DeleteTask({
   );
 
   const Content = (
-    <div className="flex flex-col gap-8">
+    <form className="flex flex-col gap-8" onSubmit={deleteTask}>
       <p className="opacity-50">
         Do you want to really delete the task &quot;
         <span className="font-bold">{name}</span>&quot;? Be careful, this action
@@ -65,16 +71,20 @@ export default function DeleteTask({
 
         <DialogClose asChild className="w-full">
           <button
-            className="py-2 bg-red-500 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
-            onClick={deleteTask}
+            className="py-2 bg-red-500 disabled:bg-red-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+            disabled={isLoading}
             type="submit"
           >
             Delete task
-            <Icon icon="ArrowRight" />
+            {isLoading ? (
+              <Icon icon="Spinner" className="animate-spin text-lg" />
+            ) : (
+              <Icon icon="ArrowRight" />
+            )}
           </button>
         </DialogClose>
       </div>
-    </div>
+    </form>
   );
 
   return <Modal title="Delete task" trigger={Trigger} content={Content} />;

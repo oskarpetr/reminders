@@ -17,9 +17,13 @@ export default function SignIn() {
   const [errorEmail, setErrorEmail] = useState<string | undefined>();
   const [errorPassword, setErrorPassword] = useState<string | undefined>();
 
+  const [loading, setLoading] = useState(false);
+
   // log in
   const logIn = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (loading) return;
 
     const emailRegex = new RegExp(
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -43,6 +47,8 @@ export default function SignIn() {
 
     setErrorPassword(undefined);
 
+    setLoading(true);
+
     const signInRes = await signIn("credentials", {
       email: email,
       password: password,
@@ -57,6 +63,8 @@ export default function SignIn() {
         setErrorPassword("Wrong password.");
       }
     }
+
+    setLoading(false);
   };
 
   return (
@@ -96,11 +104,16 @@ export default function SignIn() {
           </div>
 
           <button
-            className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+            className="py-2 bg-neutral-600 disabled:bg-neutral-700 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+            disabled={loading}
             type="submit"
           >
             Sign in
-            <Icon icon="ArrowRight" />
+            {loading ? (
+              <Icon icon="Spinner" className="animate-spin text-lg" />
+            ) : (
+              <Icon icon="ArrowRight" />
+            )}
           </button>
         </form>
       </div>

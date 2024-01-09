@@ -6,6 +6,9 @@ import axios from "axios";
 import { SelectIcon } from "../project/SelectIcon";
 import { SelectColor } from "../project/SelectColor";
 import DeleteProject from "./DeleteProject";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEditProject } from "@/utils/fetchers";
+import { uiEditProject } from "@/utils/ui-update";
 
 export default function EditProject({
   name,
@@ -21,9 +24,41 @@ export default function EditProject({
   // projects context
   const { projects, setProjects } = useProjects();
 
+  // edit fields states
+  const [editName, setEditName] = useState(name);
+  const [editSelectedColor, setEditSelectedColor] = useState<
+    string | undefined
+  >(color);
+  const [editSelectedIcon, setEditSelectedIcon] = useState<string | undefined>(
+    icon
+  );
+
+  // error states
+  const [errorName, setErrorName] = useState<string | undefined>();
+  const [errorColor, setErrorColor] = useState<string | undefined>();
+  const [errorIcon, setErrorIcon] = useState<string | undefined>();
+
+  // modal state
+  const [open, setOpen] = useState(false);
+
+  // query
+  const { refetch, isLoading } = useQuery({
+    queryKey: ["edit-project"],
+    queryFn: () =>
+      fetchEditProject({
+        projectId,
+        editName,
+        editSelectedColor: editSelectedColor!,
+        editSelectedIcon: editSelectedIcon!,
+      }),
+    enabled: false,
+  });
+
   // edit project
   const editProject = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (isLoading) return;
 
     if (editName === "") {
       setErrorName("Project name cannot be empty.");
@@ -46,22 +81,17 @@ export default function EditProject({
 
     setErrorIcon(undefined);
 
-    const res = await axios.patch(`/api/projects/${projectId}`, {
-      name: editName,
-      color: editSelectedColor,
-      icon: editSelectedIcon,
+    await refetch();
+
+    uiEditProject({
+      projects,
+      setProjects,
+      projectId,
+      editName,
+      editSelectedColor,
+      editSelectedIcon,
     });
 
-    const projectsCopy = [...projects];
-    const projectIndex = projectsCopy.findIndex(
-      (project) => project.id === projectId
-    );
-
-    projectsCopy[projectIndex].name = editName;
-    projectsCopy[projectIndex].color = editSelectedColor;
-    projectsCopy[projectIndex].icon = editSelectedIcon;
-
-    setProjects(projectsCopy);
     setOpen(false);
   };
 
@@ -71,23 +101,6 @@ export default function EditProject({
       className="opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none"
     />
   );
-
-  // edit fields states
-  const [editName, setEditName] = useState(name);
-  const [editSelectedColor, setEditSelectedColor] = useState<
-    string | undefined
-  >(color);
-  const [editSelectedIcon, setEditSelectedIcon] = useState<string | undefined>(
-    icon
-  );
-
-  // error states
-  const [errorName, setErrorName] = useState<string | undefined>();
-  const [errorColor, setErrorColor] = useState<string | undefined>();
-  const [errorIcon, setErrorIcon] = useState<string | undefined>();
-
-  // modal state
-  const [open, setOpen] = useState(false);
 
   const Content = (
     <form className="flex flex-col gap-8" onSubmit={editProject}>
@@ -127,18 +140,23 @@ export default function EditProject({
       </div>
 
       <button
-        className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+        className="py-2 bg-neutral-600 disabled:bg-neutral-700 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+        disabled={isLoading}
         type="submit"
       >
         Edit project
-        <Icon icon="ArrowRight" />
+        {isLoading ? (
+          <Icon icon="Spinner" className="animate-spin text-lg" />
+        ) : (
+          <Icon icon="ArrowRight" />
+        )}
       </button>
     </form>
   );
 
   return (
     <Modal
-      title="Settings"
+      title="Edit project"
       action={<DeleteProject name={name} projectId={projectId} />}
       trigger={Trigger}
       content={Content}

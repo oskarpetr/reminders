@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
 import { cn } from "@/utils/cn";
@@ -7,6 +7,9 @@ import axios from "axios";
 import { useProjects } from "@/context/ProjectsProvider";
 import Image from "next/image";
 import { getAvatar } from "@/utils/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCreateMember, fetchDeleteMember } from "@/utils/fetchers";
+import { uiCreateMember, uiDeleteMember } from "@/utils/ui-update";
 
 export default function Members({
   members,
@@ -28,61 +31,60 @@ export default function Members({
   // error states
   const [error, setError] = useState<string | undefined>();
 
-  // add member
-  const addMember = async () => {
+  // query
+  const createMemberQuery = useQuery({
+    queryKey: ["create-member"],
+    queryFn: () =>
+      fetchCreateMember({
+        projectId,
+        newMemberEmail,
+      }),
+    enabled: false,
+  });
+
+  // query
+  const deleteMemberQuery = useQuery({
+    queryKey: ["delete-member"],
+    queryFn: () =>
+      fetchDeleteMember({
+        projectId,
+        id: userHover!,
+      }),
+    enabled: false,
+  });
+
+  // create member
+  const createMember = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (createMemberQuery.isLoading) return;
+
     if (newMemberEmail === "") {
       setError("New member email cannot be empty.");
       return;
     }
 
-    try {
-      const res = await axios.post(`/api/projects/${projectId}/members`, {
-        email: newMemberEmail,
-      });
+    const res = await createMemberQuery.refetch();
 
-      const member = res.data.data;
-
-      const projectsCopy = [...projects];
-      const projectIndex = projects.findIndex(
-        (project) => project.id === projectId
-      );
-      projectsCopy[projectIndex].members.push({
-        id: member.id,
-        email: member.email,
-        name: member.name,
-      });
-
-      setProjects(projectsCopy);
-
-      setError(undefined);
-      setNewMember(false);
-      setNewMemberEmail("");
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        setError("This account does not exist.");
-        return;
-      }
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      setError("This account does not exist.");
+      return;
     }
+
+    const member = res.data?.data.data;
+    uiCreateMember({ projects, setProjects, projectId, member });
+
+    setError(undefined);
+    setNewMember(false);
+    setNewMemberEmail("");
   };
 
-  // remove member
-  const removeMember = async (id: number) => {
-    await axios.delete(`/api/projects/${projectId}/members`, {
-      data: {
-        accountId: id,
-      },
-    });
+  // delete member
+  const deleteMember = async () => {
+    await deleteMemberQuery.refetch();
+    console.log(userHover);
 
-    const projectsCopy = [...projects];
-    const projectIndex = projects.findIndex(
-      (project) => project.id === projectId
-    );
-    const memberIndex = projectsCopy[projectIndex].members.findIndex(
-      (member) => member.id === id
-    );
-    projectsCopy[projectIndex].members.splice(memberIndex, 1);
-
-    setProjects(projectsCopy);
+    uiDeleteMember({ projects, setProjects, projectId, id: userHover! });
   };
 
   const Trigger = (
@@ -122,7 +124,7 @@ export default function Members({
         return (
           <div key={user.id}>
             <div
-              onMouseEnter={() => setUserHover(index)}
+              onMouseEnter={() => setUserHover(user.id)}
               onMouseLeave={() => setUserHover(undefined)}
               className="flex justify-between items-center"
             >
@@ -144,14 +146,18 @@ export default function Members({
                 </div>
               </div>
 
-              <Icon
-                icon="Trash"
-                className={cn(
-                  "w-5 h-5 text-red-400 cursor-pointer transition-all",
-                  userHover === index ? "opacity-100" : "opacity-0"
-                )}
-                onClick={() => removeMember(user.id)}
-              />
+              {deleteMemberQuery.isLoading ? (
+                <Icon icon="Spinner" className="animate-spin text-lg" />
+              ) : (
+                <Icon
+                  icon="Trash"
+                  className={cn(
+                    "w-5 h-5 text-red-400 cursor-pointer transition-all",
+                    userHover === user.id ? "opacity-100" : "opacity-0"
+                  )}
+                  onClick={deleteMember}
+                />
+              )}
             </div>
 
             {index !== members.length - 1 && (
@@ -162,7 +168,10 @@ export default function Members({
       })}
 
       {newMember && (
-        <div className="flex flex-col gap-4 mt-4 border-t border-white border-opacity-10 pt-4">
+        <form
+          className="flex flex-col gap-4 mt-4 border-t border-white border-opacity-10 pt-4"
+          onSubmit={createMember}
+        >
           <p className="font-bold">New member</p>
           <input
             className="bg-white bg-opacity-10 border border-white border-opacity-10 rounded-xl px-6 py-2 focus:outline-none font-bold text-gray-300"
@@ -183,13 +192,19 @@ export default function Members({
             </button>
 
             <button
-              className="w-full py-2 rounded-xl transition-all flex items-center justify-center gap-2 bg-white text-black hover:bg-white hover:bg-opacity-80"
-              onClick={addMember}
+              className="w-full disabled:bg-opacity-80 py-2 rounded-xl transition-all flex items-center justify-center gap-2 bg-primary hover:bg-opacity-80"
+              disabled={createMemberQuery.isLoading}
+              type="submit"
             >
               Invite
+              {createMemberQuery.isLoading ? (
+                <Icon icon="Spinner" className="animate-spin text-lg" />
+              ) : (
+                <Icon icon="ArrowRight" />
+              )}
             </button>
           </div>
-        </div>
+        </form>
       )}
     </div>
   );

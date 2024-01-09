@@ -9,10 +9,11 @@ import { useProjects } from "@/context/ProjectsProvider";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { getAvatar } from "@/utils/avatar";
+import Skeleton from "react-loading-skeleton";
 
 export default function Sidebar({ project }: { project: Project | undefined }) {
   // projects context
-  const { projects } = useProjects();
+  const { projects, loading } = useProjects();
 
   // session context
   const { data: session } = useSession();
@@ -48,28 +49,56 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
         href={"/profile"}
         className="flex gap-4 items-center px-6 py-4 bg-white bg-opacity-10 hover:bg-opacity-[15%] transition-all rounded-xl border border-white border-opacity-10"
       >
-        <Image
-          src={getAvatar(parseInt(userId as string))}
-          alt="Avatar"
-          className="h-12 w-12 rounded-full border border-white border-opacity-10"
-          width={48}
-          height={48}
-          style={{ objectFit: "cover" }}
-        />
+        {session?.user ? (
+          <>
+            <Image
+              src={getAvatar(parseInt(userId as string))}
+              alt="Avatar"
+              className="h-12 w-12 rounded-full border border-white border-opacity-10"
+              width={48}
+              height={48}
+              style={{ objectFit: "cover" }}
+            />
 
-        <div>
-          <p className="text-lg font-bold">{session?.user?.name}</p>
-          <p className="text-gray-400 font-bold mt-[-4px]">
-            {session?.user?.email}
-          </p>
-        </div>
+            <div>
+              <p className="text-lg font-bold">{session?.user?.name}</p>
+              <p className="text-gray-400 font-bold mt-[-4px]">
+                {session?.user?.email}
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <Skeleton
+              width={48}
+              height={48}
+              circle
+              baseColor="#4a4a4a"
+              highlightColor="#565656"
+            />
+
+            <div>
+              <Skeleton
+                width={48}
+                height={20}
+                borderRadius={8}
+                baseColor="#4a4a4a"
+                highlightColor="#565656"
+              />
+              <Skeleton
+                width={96}
+                height={16}
+                borderRadius={8}
+                baseColor="#4a4a4a"
+                highlightColor="#565656"
+              />
+            </div>
+          </>
+        )}
       </Link>
 
       <div className="flex flex-col gap-4 mt-16">
-        <div className="flex items-center gap-4">
-          <p className="font-bold opacity-50">Dashboard</p>
-          <div className="border-white border-b border-opacity-10 w-full"></div>
-        </div>
+        <p className="font-bold opacity-50">Dashboard</p>
 
         <div className="flex flex-col gap-1">
           {menu.map((item) => {
@@ -106,40 +135,42 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
       </div>
 
       <div className="flex flex-col gap-4 mt-8">
-        <div className="flex gap-4 items-center">
-          <div className="flex gap-2 items-center">
-            <p className="font-bold opacity-50">Projects</p>
-            <p className="font-bold text-gray-300 bg-white bg-opacity-20 rounded-full px-2 text-sm">
-              {projects.length}
-            </p>
-          </div>
-
-          <div className="border-white border-b border-opacity-10 w-full"></div>
+        <div className="flex gap-2 items-center">
+          <p className="font-bold opacity-50">Projects</p>
+          <p className="font-bold text-gray-300 bg-white bg-opacity-20 rounded-full px-2 text-sm">
+            {projects.length}
+          </p>
         </div>
 
         <div className="flex flex-col gap-1">
-          {projects.map((proj) => {
-            return (
-              <Link
-                key={proj.id}
-                href={`/projects/${proj.id}`}
-                className={cn(
-                  "px-6 py-3 rounded-xl transition-all flex items-center gap-2",
-                  project?.id !== proj.id
-                    ? "hover:bg-white hover:bg-opacity-5"
-                    : null
-                )}
-                style={
-                  project?.id === proj.id
-                    ? { backgroundColor: colorToHex(proj.color) }
-                    : {}
-                }
-              >
-                <Icon icon={proj!.icon} className="text-xl opacity-80" />
-                <p className="font-bold">{proj.name}</p>
-              </Link>
-            );
-          })}
+          {loading || (!loading && projects.length === 0)
+            ? new Array(3).fill(null).map((_) => {
+                return (
+                  <Skeleton key={Math.random()} height={48} borderRadius={12} />
+                );
+              })
+            : projects.map((proj) => {
+                return (
+                  <Link
+                    key={proj.id}
+                    href={`/projects/${proj.id}`}
+                    className={cn(
+                      "px-6 py-3 rounded-xl transition-all flex items-center gap-2",
+                      project?.id !== proj.id
+                        ? "hover:bg-white hover:bg-opacity-5"
+                        : null
+                    )}
+                    style={
+                      project?.id === proj.id
+                        ? { backgroundColor: colorToHex(proj.color) }
+                        : {}
+                    }
+                  >
+                    <Icon icon={proj.icon} className="text-xl opacity-80" />
+                    <p className="font-bold">{proj.name}</p>
+                  </Link>
+                );
+              })}
 
           <AddProject />
         </div>

@@ -37,7 +37,7 @@ export default function Task({
       done: !done,
     });
 
-    const projectsCopy = [...projects];
+    const projectsCopy = [...projects!];
     const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
     const taskIndex = projectsCopy[projectIndex].tasks.findIndex(
       (task) => task.id === id
@@ -84,7 +84,7 @@ export default function Task({
             {name}
           </p>
           <p className="text-gray-500 font-bold">
-            {new Date(due).toLocaleDateString()}
+            {new Date(due).toLocaleDateString("en-GB")}
           </p>
         </div>
       </div>

@@ -3,8 +3,12 @@ import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
 import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
-import axios from "axios";
-import { sqlDate } from "@/utils/date";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { format } from "date-fns";
+import { Calendar } from "../ui/calendar";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCreateTask } from "@/utils/fetchers";
+import { uiCreateTask } from "@/utils/ui-update";
 
 export default function AddTask({
   color,
@@ -16,9 +20,28 @@ export default function AddTask({
   // projects context
   const { projects, setProjects } = useProjects();
 
+  // fields state
+  const [name, setName] = useState("");
+  const [due, setDue] = useState(new Date());
+
+  // name error state
+  const [errorName, setErrorName] = useState<string | undefined>();
+
+  // modal state
+  const [open, setOpen] = useState(false);
+
+  // query
+  const { refetch, isLoading } = useQuery({
+    queryKey: ["add-task"],
+    queryFn: () => fetchCreateTask({ projectId, name, due }),
+    enabled: false,
+  });
+
   // create task
   const createTask = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (isLoading) return;
 
     if (name === "") {
       setErrorName("Task name cannot be empty.");
@@ -27,24 +50,17 @@ export default function AddTask({
 
     setErrorName(undefined);
 
-    const res = await axios.post(`/api/projects/${projectId}/tasks`, {
-      name: name,
-      due: sqlDate(due),
-      done: false,
+    const res = await refetch();
+
+    uiCreateTask({
+      projects,
+      setProjects,
+      projectId,
+      taskId: res.data?.data.data.taskId,
+      name,
+      due,
     });
 
-    const taskId = res.data.data.taskId;
-
-    const projectsCopy = [...projects];
-    const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
-    projectsCopy[projectIndex].tasks.push({
-      id: taskId,
-      name: name,
-      due: due,
-      done: false,
-    });
-
-    setProjects(projectsCopy);
     setOpen(false);
   };
 
@@ -57,16 +73,6 @@ export default function AddTask({
       <p className="font-bold">Task</p>
     </div>
   );
-
-  // fields state
-  const [name, setName] = useState("");
-  const [due, setDue] = useState(new Date());
-
-  // name error state
-  const [errorName, setErrorName] = useState<string | undefined>();
-
-  // modal state
-  const [open, setOpen] = useState(false);
 
   const Content = (
     <form className="flex flex-col gap-8" onSubmit={createTask}>
@@ -84,21 +90,41 @@ export default function AddTask({
 
       <div className="flex flex-col gap-4">
         <p className="font-bold">Due date</p>
-        <input
-          className="bg-white bg-opacity-10 border border-white border-opacity-10 rounded-xl px-6 py-2 focus:outline-none font-bold text-gray-300 placeholder:text-gray-300"
-          placeholder="Enter date"
-          type="date"
-          value={sqlDate(due)}
-          onChange={(e) => setDue(new Date(e.target.value))}
-        />
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <div className="flex cursor-pointer items-center gap-2 bg-white bg-opacity-10 border border-white border-opacity-10 rounded-xl px-6 py-2 focus:outline-none font-bold text-gray-300 placeholder:text-neutral-300">
+              <Icon icon="CalendarBlank" />
+              {due ? (
+                <p className="text-neutral-300">{format(due, "dd/MM/yyyy")}</p>
+              ) : (
+                <p>Pick a date</p>
+              )}
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 border-none bg-transparent">
+            <Calendar
+              mode="single"
+              selected={due}
+              onSelect={setDue}
+              initialFocus
+              className="bg-neutral-800 rounded-xl border border-white border-opacity-20"
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
       <button
-        className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+        className="py-2 bg-neutral-600 disabled:bg-neutral-700 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+        disabled={isLoading}
         type="submit"
       >
         Create task
-        <Icon icon="ArrowRight" />
+        {isLoading ? (
+          <Icon icon="Spinner" className="animate-spin text-lg" />
+        ) : (
+          <Icon icon="ArrowRight" />
+        )}
       </button>
     </form>
   );

@@ -2,10 +2,12 @@ import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
 import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { SelectIcon } from "../project/SelectIcon";
 import { SelectColor } from "../project/SelectColor";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCreateProject } from "@/utils/fetchers";
+import { uiCreateProject } from "@/utils/ui-update";
 
 export default function AddProject() {
   // projects context
@@ -14,9 +16,32 @@ export default function AddProject() {
   // router
   const router = useRouter();
 
+  // fields states
+  const [name, setName] = useState("");
+  const [selectedColor, setSelectedColor] = useState<string>();
+  const [selectedIcon, setSelectedIcon] = useState<string>();
+
+  // error states
+  const [errorName, setErrorName] = useState<string | undefined>();
+  const [errorColor, setErrorColor] = useState<string | undefined>();
+  const [errorIcon, setErrorIcon] = useState<string | undefined>();
+
+  // modal state
+  const [open, setOpen] = useState(false);
+
+  // query
+  const { refetch, isLoading } = useQuery({
+    queryKey: ["add-project"],
+    queryFn: () =>
+      fetchCreateProject({ name, color: selectedColor!, icon: selectedIcon! }),
+    enabled: false,
+  });
+
   // create project
   const createProject = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (isLoading) return;
 
     if (name === "") {
       setErrorName("Project name cannot be empty.");
@@ -39,29 +64,23 @@ export default function AddProject() {
 
     setErrorIcon(undefined);
 
-    const res = await axios.post("/api/projects", {
-      name: name,
-      color: selectedColor,
-      icon: selectedIcon,
-    });
+    const res = await refetch();
 
-    const projectId = res.data.data.projectId;
+    if (res.data) {
+      const projectId = res.data.data.data.projectId;
 
-    const projectsCopy = [...projects];
-    projectsCopy.push({
-      id: projectId,
-      name: name,
-      color: selectedColor!,
-      icon: selectedIcon!,
-      tasks: [],
-      members: [],
-      logs: [],
-    });
+      uiCreateProject({
+        projects,
+        setProjects,
+        projectId,
+        name,
+        color: selectedColor,
+        icon: selectedIcon,
+      });
 
-    setProjects(projectsCopy);
-    setOpen(false);
-
-    router.push(`/projects/${projectId}`);
+      setOpen(false);
+      router.push(`/projects/${projectId}`);
+    }
   };
 
   const Trigger = (
@@ -70,19 +89,6 @@ export default function AddProject() {
       <p className="font-bold opacity-50">Add project</p>
     </div>
   );
-
-  // fields states
-  const [name, setName] = useState("");
-  const [selectedColor, setSelectedColor] = useState<string>();
-  const [selectedIcon, setSelectedIcon] = useState<string>();
-
-  // error states
-  const [errorName, setErrorName] = useState<string | undefined>();
-  const [errorColor, setErrorColor] = useState<string | undefined>();
-  const [errorIcon, setErrorIcon] = useState<string | undefined>();
-
-  // modal state
-  const [open, setOpen] = useState(false);
 
   const Content = (
     <form className="flex flex-col gap-8" onSubmit={createProject}>
@@ -122,11 +128,16 @@ export default function AddProject() {
       </div>
 
       <button
-        className="py-2 bg-neutral-600 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
+        className="py-2 bg-neutral-600 disabled:bg-neutral-700 rounded-xl text-white mt-4 font-bold flex items-center gap-2 justify-center"
         type="submit"
+        disabled={isLoading}
       >
         Create project
-        <Icon icon="ArrowRight" />
+        {isLoading ? (
+          <Icon icon="Spinner" className="animate-spin text-lg" />
+        ) : (
+          <Icon icon="ArrowRight" />
+        )}
       </button>
     </form>
   );
