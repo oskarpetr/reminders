@@ -1,8 +1,8 @@
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import Icon from "../generic/Icon";
 import Headline from "../generic/Headline";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/Dialog";
 
 export default function Modal({
   trigger,

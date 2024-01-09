@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
-import { DialogClose } from "../ui/dialog";
 import { useProjects } from "@/context/ProjectsProvider";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
 import { fetchDeleteProject } from "@/utils/fetchers";
 import { uiDeleteProject } from "@/utils/ui-update";
+import { DialogClose } from "../ui/Dialog";
 
 export default function DeleteProject({
   projectId,
