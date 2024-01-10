@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token;
         token.id = user?.id;
       }
+
       return token;
     },
     session({ session, token }: { session: any; token: JWT }) {

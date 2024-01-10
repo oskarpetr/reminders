@@ -12,12 +12,11 @@ export default async function handler(
     try {
       const body: {
         name: string;
-        email: string;
       } = request.body;
 
       // update account
-      await sql`UPDATE account SET name = ${body.name}, email = ${
-        body.email
+      await sql`UPDATE account SET name = ${
+        body.name
       } WHERE id = ${id?.toString()}`;
 
       return response.status(200);
