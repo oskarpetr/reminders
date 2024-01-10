@@ -14,7 +14,7 @@ Reminders is an intuitive task-tracking app designed to enhance your productivit
 
 Users can create their new account, once they reach the website. They will be automatically redirected to a **Sign in** page. If a user does not have already an existing account, they can click on the **Register** link below the sign-in form. To register a new account, the user must fill in the name, email, and password field, and also upload an avatar for their account profile picture.
 
-![image](https://github.com/oskarpetr/reminders/assets/64423998/6708184d-daea-4458-aa3a-de92430483d5)
+![image](https://github.com/oskarpetr/reminders/assets/64423998/94d2ea3c-4c48-4ad9-9042-eac34357ff60)
 
 Once your account is created, you will be redirected to a **Sign in** page, where you need to fill out the email and password fields. If your password is incorrect, you will get prompted to fill in the correct password.
 
