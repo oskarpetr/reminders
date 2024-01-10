@@ -12,7 +12,7 @@ export default function Home() {
     <Layout project={undefined}>
       <Headline text="Reminders" />
 
-      {loading || (!loading && projects.length === 0) ? (
+      {loading ? (
         <div className="flex flex-col gap-4 mt-8">
           <p className="text-lg font-semibold opacity-50">Recent projects</p>
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

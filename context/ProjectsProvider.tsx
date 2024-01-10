@@ -44,6 +44,7 @@ async function fetchProjects(email: string) {
 
 // projects provider
 export default function ProjectsProvider({ children }: PropsWithChildren) {
+  const [tempProjects, setTempProjects] = useState<Project[] | undefined>();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
@@ -51,14 +52,18 @@ export default function ProjectsProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     async function getProjects(email: string) {
       const projects = await fetchProjects(email);
-      setProjects(projects);
+      setTempProjects(projects);
     }
 
-    if (status === "authenticated" || projects === undefined) {
+    if (status === "authenticated" || tempProjects === undefined) {
       getProjects(session?.user.email!);
-      setLoading(false);
+      setProjects(tempProjects ?? []);
     }
   }, [status]);
+
+  useEffect(() => {
+    if (tempProjects !== undefined) setLoading(false);
+  }, [tempProjects]);
 
   return (
     <ProjectsContext.Provider value={{ projects, setProjects, loading }}>

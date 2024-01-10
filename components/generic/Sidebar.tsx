@@ -143,7 +143,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
         </div>
 
         <div className="flex flex-col gap-1">
-          {loading || (!loading && projects.length === 0)
+          {loading
             ? new Array(3).fill(null).map((_) => {
                 return (
                   <Skeleton key={Math.random()} height={48} borderRadius={12} />
