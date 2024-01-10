@@ -15,7 +15,9 @@ export default function SignIn() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState("");
-  const [encryptedPassword, setEncryptedPassword] = useState("");
+  const [encryptedPassword, setEncryptedPassword] = useState<
+    string | undefined
+  >();
 
   // error states
   const [errorName, setErrorName] = useState<string | undefined>();
@@ -28,9 +30,14 @@ export default function SignIn() {
 
   // query
   const { refetch, isLoading } = useQuery({
-    queryKey: ["add-project"],
+    queryKey: ["sign-up"],
     queryFn: () =>
-      fetchCreateAccount({ name, email, encryptedPassword, avatar }),
+      fetchCreateAccount({
+        name,
+        email,
+        encryptedPassword: encryptedPassword!,
+        avatar,
+      }),
     enabled: false,
   });
 
@@ -76,19 +83,26 @@ export default function SignIn() {
 
     setErrorPassword(undefined);
 
-    setEncryptedPassword(
-      await bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-    );
+    const encrypted = await bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    setEncryptedPassword(encrypted);
+  };
 
-    const res = await refetch();
+  useEffect(() => {
+    async function registerAccount() {
+      const res = await refetch();
 
-    if (axios.isAxiosError(res.error) && res.error.response?.status === 409) {
-      setErrorEmail("Email already in use.");
-      return;
+      if (axios.isAxiosError(res.error) && res.error.response?.status === 409) {
+        setErrorEmail("Email already in use.");
+        return;
+      }
+
+      router.push("/sign-in");
     }
 
-    router.push("/sign-in");
-  };
+    if (encryptedPassword) {
+      registerAccount();
+    }
+  }, [encryptedPassword]);
 
   // convert file to base 64 string
   useEffect(() => {
