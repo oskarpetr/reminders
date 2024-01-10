@@ -3,6 +3,7 @@
 Reminders is an intuitive task-tracking app designed to enhance your productivity. Reminders allow you to create projects, share them with other users and be always on time with your tasks. Explore the full experience of Reminders by visiting the site at [Reminders](https://reminders.oskarpetr.dev).
 
 ## List of technologies
+
 - Next.js
 - React.js
 - Typescript
@@ -53,7 +54,6 @@ In the edit project popup, you can also find a button for the project deletion. 
 When creating a new task, it is important to be present in the project, where you want the task to be created. You can create a new task by pressing the **Add task** button, then you will get prompted with a popup. In order to create it, you must fill in the required fields, and that it is the task name with the task due date. After filling these fields out, click on the **Create task** button, afterwards the popup will automatically close.
 
 ![image](https://github.com/oskarpetr/reminders/assets/64423998/5d7fcde1-bd7a-450c-bd61-39f97ea115ad)
-
 
 ### Editing a task
 

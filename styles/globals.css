@@ -142,6 +142,9 @@ input[type=date] {
 
 input[type=file]::file-selector-button {
   opacity: 0;
+  height: 80px;
+  width: 80px;
+  cursor: pointer;
 }
 
 .scrollbar-hide::-webkit-scrollbar {

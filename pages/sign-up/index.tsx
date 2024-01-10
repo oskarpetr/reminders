@@ -7,6 +7,8 @@ import bcrypt from "bcryptjs-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCreateAccount } from "@/utils/fetchers";
+import Image from "next/image";
+import { cn } from "@/utils/cn";
 
 export default function SignIn() {
   // fields states
@@ -24,6 +26,9 @@ export default function SignIn() {
   const [errorEmail, setErrorEmail] = useState<string | undefined>();
   const [errorPassword, setErrorPassword] = useState<string | undefined>();
   const [errorFile, setErrorFile] = useState<string | undefined>();
+
+  // avatar hover
+  const [avatarHover, setAvatarHover] = useState(false);
 
   // router
   const router = useRouter();
@@ -49,6 +54,11 @@ export default function SignIn() {
 
     if (file === undefined) {
       setErrorFile("Select an avatar.");
+      return;
+    }
+
+    if (file.size / 1000000 > 1) {
+      setErrorFile("Avatar size must be smaller than 1MB.");
       return;
     }
 
@@ -129,9 +139,13 @@ export default function SignIn() {
             <p className="font-bold">Avatar</p>
 
             <div className="flex items-center gap-6">
-              <div className="relative">
+              <div
+                className="relative"
+                onMouseEnter={() => setAvatarHover(true)}
+                onMouseLeave={() => setAvatarHover(false)}
+              >
                 <input
-                  className="bg-white cursor-pointer bg-opacity-10 border border-white border-opacity-10 rounded-full w-20 h-20 focus:outline-none font-bold text-gray-300"
+                  className="opacity-0 w-20 h-20"
                   placeholder="Choose file"
                   type="file"
                   accept=".png,.jpg,.jpeg"
@@ -141,10 +155,37 @@ export default function SignIn() {
                     }
                   }}
                 />
-                <Icon
-                  icon={file ? "Check" : "Camera"}
-                  className="absolute text-2xl top-7 left-7 pointer-events-none"
-                />
+
+                {avatar ? (
+                  <Image
+                    src={avatar}
+                    alt="Avatar"
+                    width={80}
+                    height={80}
+                    style={{ objectFit: "cover" }}
+                    className="border w-20 h-20 border-white border-opacity-10 rounded-full absolute top-0 pointer-events-none cursor-pointer"
+                  />
+                ) : (
+                  <div className="bg-white pointer-events-none absolute top-0 cursor-pointer bg-opacity-10 border border-white border-opacity-10 rounded-full w-20 h-20 focus:outline-none font-bold text-gray-300"></div>
+                )}
+
+                <div
+                  className={cn(
+                    "absolute top-0 left-0 bg-black p-7 rounded-full transition-all pointer-events-none",
+                    avatar
+                      ? avatarHover
+                        ? "bg-opacity-50"
+                        : "opacity-0"
+                      : avatarHover
+                      ? "bg-opacity-10"
+                      : "bg-opacity-0"
+                  )}
+                >
+                  <Icon
+                    icon="Camera"
+                    className="text-2xl pointer-events-none cursor-pointer"
+                  />
+                </div>
               </div>
 
               {file && (

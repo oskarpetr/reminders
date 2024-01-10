@@ -55,15 +55,15 @@ export default function ProjectsProvider({ children }: PropsWithChildren) {
       setTempProjects(projects);
     }
 
-    if (status === "authenticated" || tempProjects === undefined) {
+    if (status === "authenticated") {
       getProjects(session?.user.email!);
-      setProjects(tempProjects ?? []);
-    }
-  }, [status]);
 
-  useEffect(() => {
-    if (tempProjects !== undefined) setLoading(false);
-  }, [tempProjects]);
+      if (tempProjects !== undefined) {
+        setProjects(tempProjects);
+        setLoading(false);
+      }
+    }
+  }, [status, tempProjects]);
 
   return (
     <ProjectsContext.Provider value={{ projects, setProjects, loading }}>
