@@ -7,6 +7,7 @@ import { FormEvent } from "react";
 import { fetchDeleteProject } from "@/utils/fetchers";
 import { uiDeleteProject } from "@/utils/ui-update";
 import { DialogClose } from "../ui/Dialog";
+import { toast } from "sonner";
 
 export default function DeleteProject({
   projectId,
@@ -38,9 +39,9 @@ export default function DeleteProject({
 
     uiDeleteProject({ projects, setProjects, projectId });
 
-    router.push("/");
+    toast.success("Project has been deleted.");
 
-    toast.success("Project has been created.");
+    router.push("/");
   };
 
   const Trigger = (
