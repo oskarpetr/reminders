@@ -55,7 +55,7 @@ export default function ProjectsProvider({ children }: PropsWithChildren) {
       setTempProjects(projects);
     }
 
-    if (status === "authenticated") {
+    if (status === "authenticated" && loading === true) {
       getProjects(session?.user.email!);
 
       if (tempProjects !== undefined) {

@@ -10,6 +10,7 @@ import { getAvatar } from "@/utils/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCreateMember, fetchDeleteMember } from "@/utils/fetchers";
 import { uiCreateMember, uiDeleteMember } from "@/utils/ui-update";
+import { toast } from "sonner";
 
 export default function Members({
   members,
@@ -77,6 +78,8 @@ export default function Members({
     setError(undefined);
     setNewMember(false);
     setNewMemberEmail("");
+
+    toast.success("Member has been added.");
   };
 
   // delete member
@@ -85,6 +88,8 @@ export default function Members({
     console.log(userHover);
 
     uiDeleteMember({ projects, setProjects, projectId, id: userHover! });
+
+    toast.success("Member has been removed.");
   };
 
   const Trigger = (
@@ -113,7 +118,7 @@ export default function Members({
           })}
         </div>
       ) : (
-        <Icon icon="Export" className="opacity-50 text-lg" />
+        <Icon icon="Export" className="opacity-50 text-lg text-white" />
       )}
     </div>
   );
@@ -147,12 +152,15 @@ export default function Members({
               </div>
 
               {deleteMemberQuery.isLoading ? (
-                <Icon icon="Spinner" className="animate-spin text-lg" />
+                <Icon
+                  icon="Spinner"
+                  className="animate-spin text-lg text-white"
+                />
               ) : (
                 <Icon
                   icon="Trash"
                   className={cn(
-                    "w-5 h-5 text-red-400 cursor-pointer transition-all",
+                    "w-5 h-5 cursor-pointer transition-all text-white",
                     userHover === user.id ? "opacity-100" : "opacity-0"
                   )}
                   onClick={deleteMember}
@@ -198,9 +206,12 @@ export default function Members({
             >
               Invite
               {createMemberQuery.isLoading ? (
-                <Icon icon="Spinner" className="animate-spin text-lg" />
+                <Icon
+                  icon="Spinner"
+                  className="animate-spin text-lg text-white"
+                />
               ) : (
-                <Icon icon="ArrowRight" />
+                <Icon icon="ArrowRight" className="text-white" />
               )}
             </button>
           </div>
@@ -214,7 +225,7 @@ export default function Members({
       className="px-6 py-2 rounded-xl transition-all flex items-center gap-2 bg-white bg-opacity-10 hover:bg-white hover:bg-opacity-20"
       onClick={() => setNewMember(true)}
     >
-      <Icon icon="Plus" className="text-xl opacity-80" />
+      <Icon icon="Plus" className="text-xl opacity-80 text-white" />
       <p className="font-bold">Add</p>
     </button>
   );

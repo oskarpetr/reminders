@@ -6,12 +6,20 @@ import ProjectsProvider from "@/context/ProjectsProvider";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "sonner";
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: true,
+        staleTime: 10000,
+      },
+    },
+  });
 
   return (
     <SessionProvider session={session}>
@@ -20,6 +28,7 @@ export default function App({
           <SkeletonTheme baseColor="#303030" highlightColor="#3d3d3d">
             <Component {...pageProps} />
             <Analytics />
+            <Toaster richColors />
           </SkeletonTheme>
         </ProjectsProvider>
       </QueryClientProvider>

@@ -8,6 +8,7 @@ import { SelectColor } from "../project/SelectColor";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCreateProject } from "@/utils/fetchers";
 import { uiCreateProject } from "@/utils/ui-update";
+import { toast } from "sonner";
 
 export default function AddProject() {
   // projects context
@@ -80,12 +81,14 @@ export default function AddProject() {
 
       setOpen(false);
       router.push(`/projects/${projectId}`);
+
+      toast.success("Project has been created.");
     }
   };
 
   const Trigger = (
     <div className="px-6 py-3 rounded-xl transition-all flex items-center gap-2 hover:bg-white hover:bg-opacity-5">
-      <Icon icon="Plus" className="text-xl opacity-50" />
+      <Icon icon="Plus" className="text-xl opacity-50 text-white" />
       <p className="font-bold opacity-50">Add project</p>
     </div>
   );
@@ -134,9 +137,9 @@ export default function AddProject() {
       >
         Create project
         {isLoading ? (
-          <Icon icon="Spinner" className="animate-spin text-lg" />
+          <Icon icon="Spinner" className="animate-spin text-lg text-white" />
         ) : (
-          <Icon icon="ArrowRight" />
+          <Icon icon="ArrowRight" className="text-white" />
         )}
       </button>
     </form>

@@ -114,7 +114,10 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
                       : "bg-white bg-opacity-20"
                   )}
                 >
-                  <Icon icon={item.icon} className="text-xl opacity-80" />
+                  <Icon
+                    icon={item.icon}
+                    className="text-xl opacity-80 text-white"
+                  />
                   <p className="font-bold">{item.name}</p>
                 </Link>
               );
@@ -125,7 +128,10 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
                   onClick={item.action}
                   className="px-6 py-3 rounded-xl transition-all flex items-center gap-2 hover:bg-white hover:bg-opacity-5"
                 >
-                  <Icon icon={item.icon} className="text-xl opacity-80" />
+                  <Icon
+                    icon={item.icon}
+                    className="text-xl opacity-80 text-white"
+                  />
                   <p className="font-bold">{item.name}</p>
                 </button>
               );
@@ -166,7 +172,10 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
                         : {}
                     }
                   >
-                    <Icon icon={proj.icon} className="text-xl opacity-80" />
+                    <Icon
+                      icon={proj.icon}
+                      className="text-xl opacity-80 text-white"
+                    />
                     <p className="font-bold">{proj.name}</p>
                   </Link>
                 );

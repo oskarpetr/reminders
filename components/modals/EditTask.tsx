@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { uiEditTask } from "@/utils/ui-update";
 import { fetchEditTask } from "@/utils/fetchers";
 import { cn } from "@/utils/cn";
+import { toast } from "sonner";
 
 export default function EditTask({
   taskId,
@@ -99,13 +100,15 @@ export default function EditTask({
 
     setTaskHover(undefined);
     setOpen(false);
+
+    toast.success("Task has been edited.");
   };
 
   const Trigger = (
     <Icon
       icon="PencilSimple"
       className={cn(
-        "opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
+        "opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
         taskId === taskHover ? "opacity-50" : "opacity-0"
       )}
     />
@@ -131,7 +134,7 @@ export default function EditTask({
         <Popover>
           <PopoverTrigger asChild>
             <div className="flex cursor-pointer items-center gap-2 bg-white bg-opacity-10 border border-white border-opacity-10 rounded-xl px-6 py-2 focus:outline-none font-bold text-gray-300 placeholder:text-gray-300">
-              <Icon icon="CalendarBlank" className="opacity-50" />
+              <Icon icon="CalendarBlank" className="opacity-50 text-white" />
               {due ? (
                 <p className="text-neutral-300">
                   {format(editDue!, "dd/MM/yyyy")}
@@ -160,9 +163,9 @@ export default function EditTask({
       >
         Edit task
         {isLoading ? (
-          <Icon icon="Spinner" className="animate-spin text-lg" />
+          <Icon icon="Spinner" className="animate-spin text-lg text-white" />
         ) : (
-          <Icon icon="ArrowRight" />
+          <Icon icon="ArrowRight" className="text-white" />
         )}
       </button>
     </form>

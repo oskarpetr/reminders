@@ -33,7 +33,7 @@ export default function Modal({
           <div className="flex items-center justify-between mb-8">
             <Headline text={title} action={action} size="h2" margin={false} />
             <DialogClose asChild>
-              <Icon icon="X" className="text-xl cursor-pointer" />
+              <Icon icon="X" className="text-xl cursor-pointer text-white" />
             </DialogClose>
           </div>
 

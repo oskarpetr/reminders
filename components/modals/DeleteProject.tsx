@@ -39,11 +39,13 @@ export default function DeleteProject({
     uiDeleteProject({ projects, setProjects, projectId });
 
     router.push("/");
+
+    toast.success("Project has been created.");
   };
 
   const Trigger = (
     <button className="px-6 py-2 rounded-xl transition-all flex items-center gap-2 bg-white bg-opacity-10 hover:bg-white hover:bg-opacity-20">
-      <Icon icon="TrashSimple" className="text-xl opacity-80" />
+      <Icon icon="TrashSimple" className="text-xl opacity-80 text-white" />
       <p className="font-bold">Delete</p>
     </button>
   );
@@ -74,9 +76,12 @@ export default function DeleteProject({
           >
             Delete project
             {isLoading ? (
-              <Icon icon="Spinner" className="animate-spin text-lg" />
+              <Icon
+                icon="Spinner"
+                className="animate-spin text-lg text-white"
+              />
             ) : (
-              <Icon icon="ArrowRight" />
+              <Icon icon="ArrowRight" className="text-white" />
             )}
           </button>
         </DialogClose>

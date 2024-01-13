@@ -8,6 +8,7 @@ import DeleteProject from "./DeleteProject";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEditProject } from "@/utils/fetchers";
 import { uiEditProject } from "@/utils/ui-update";
+import { toast } from "sonner";
 
 export default function EditProject({
   name,
@@ -92,12 +93,14 @@ export default function EditProject({
     });
 
     setOpen(false);
+
+    toast.success("Project has been edited.");
   };
 
   const Trigger = (
     <Icon
       icon="GearSix"
-      className="opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none"
+      className="opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none"
     />
   );
 
@@ -145,9 +148,9 @@ export default function EditProject({
       >
         Edit project
         {isLoading ? (
-          <Icon icon="Spinner" className="animate-spin text-lg" />
+          <Icon icon="Spinner" className="animate-spin text-lg text-white" />
         ) : (
-          <Icon icon="ArrowRight" />
+          <Icon icon="ArrowRight" className="text-white" />
         )}
       </button>
     </form>

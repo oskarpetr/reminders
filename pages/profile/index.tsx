@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Profile() {
   // session context
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
 
   // fields states
   const [name, setName] = useState<string>();
@@ -18,6 +18,7 @@ export default function Profile() {
 
   // error states
   const [errorName, setErrorName] = useState<string | undefined>();
+  const [errorFile, setErrorFile] = useState<string | undefined>();
 
   // avatar ref
   const avatarRef = useRef<HTMLInputElement>(null);
@@ -45,6 +46,19 @@ export default function Profile() {
   // change avatar
   useEffect(() => {
     async function updateAvatar() {
+      if (file === undefined) {
+        setErrorFile("Select an avatar.");
+        return;
+      }
+
+      if (file.size / 1000000 > 1) {
+        setErrorFile("Avatar size must be smaller than 1MB.");
+        setAvatar(undefined);
+        return;
+      }
+
+      setErrorFile(undefined);
+
       await axios.patch(
         `/api/accounts/${parseInt(session?.user?.id as string)}/avatar`,
         { avatar: avatar }
@@ -80,36 +94,40 @@ export default function Profile() {
 
       {session?.user && (
         <div className="flex flex-col gap-8 w-[30rem]">
-          <div className="flex items-center gap-8">
-            <Image
-              src={avatar ? avatar : session?.user?.image!}
-              alt="Avatar"
-              height={96}
-              width={96}
-              className="rounded-full w-24 h-24 border border-white border-opacity-10"
-              style={{ objectFit: "cover" }}
-            />
-
-            <div className="flex flex-col gap-2">
-              <p className="font-bold">Avatar image</p>
-              <button
-                className="px-6 py-2 rounded-xl bg-white text-black font-semibold cursor-pointer"
-                onClick={() => avatarRef.current?.click()}
-              >
-                Upload avatar
-              </button>
-
-              <input
-                ref={avatarRef}
-                onChange={(e) => {
-                  if (e.target.files) {
-                    setFile(e.target.files[0]);
-                  }
-                }}
-                type="file"
-                className="px-6 py-2 rounded-xl bg-white text-black font-semibold opacity-0 absolute"
+          <div>
+            <div className="flex items-center gap-8">
+              <Image
+                src={avatar ? avatar : session?.user?.image!}
+                alt="Avatar"
+                height={96}
+                width={96}
+                className="rounded-full w-24 h-24 border border-white border-opacity-10"
+                style={{ objectFit: "cover" }}
               />
+              <div className="flex flex-col gap-2">
+                <p className="font-bold">Avatar image</p>
+                <button
+                  className="px-6 py-2 rounded-xl bg-white text-black font-semibold cursor-pointer"
+                  onClick={() => avatarRef.current?.click()}
+                >
+                  Upload avatar
+                </button>
+
+                <input
+                  ref={avatarRef}
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setFile(e.target.files[0]);
+                    }
+                  }}
+                  type="file"
+                  className="px-6 py-2 rounded-xl bg-white text-black font-semibold opacity-0 absolute"
+                />
+              </div>
             </div>
+            {errorFile && (
+              <p className="text-red-400 font-bold mt-2">{errorFile}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">

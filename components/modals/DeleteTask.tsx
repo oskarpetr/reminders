@@ -7,6 +7,7 @@ import { fetchDeleteTask } from "@/utils/fetchers";
 import { uiDeleteTask } from "@/utils/ui-update";
 import { FormEvent } from "react";
 import { DialogClose } from "../ui/Dialog";
+import { toast } from "sonner";
 
 export default function DeleteTask({
   taskId,
@@ -38,13 +39,15 @@ export default function DeleteTask({
     await refetch();
 
     uiDeleteTask({ projects, setProjects, projectId, taskId });
+
+    toast.success("Task has been deleted.");
   };
 
   const Trigger = (
     <Icon
       icon="TrashSimple"
       className={cn(
-        "opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
+        "opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
         taskId === taskHover ? "opacity-50" : "opacity-0"
       )}
     />
@@ -76,9 +79,12 @@ export default function DeleteTask({
           >
             Delete task
             {isLoading ? (
-              <Icon icon="Spinner" className="animate-spin text-lg" />
+              <Icon
+                icon="Spinner"
+                className="animate-spin text-lg text-white"
+              />
             ) : (
-              <Icon icon="ArrowRight" />
+              <Icon icon="ArrowRight" className="text-white" />
             )}
           </button>
         </DialogClose>

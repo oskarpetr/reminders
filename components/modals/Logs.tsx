@@ -7,7 +7,7 @@ export default function Logs({ logs }: { logs: LogType[] }) {
   const Trigger = (
     <Icon
       icon="ArrowClockwise"
-      className="opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none"
+      className="opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none text-white"
     />
   );
 

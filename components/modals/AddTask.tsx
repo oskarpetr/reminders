@@ -9,6 +9,7 @@ import { Calendar } from "../ui/calendar";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCreateTask } from "@/utils/fetchers";
 import { uiCreateTask } from "@/utils/ui-update";
+import { toast } from "sonner";
 
 export default function AddTask({
   color,
@@ -62,6 +63,7 @@ export default function AddTask({
     });
 
     setOpen(false);
+    toast.success("Task has been created.");
   };
 
   const Trigger = (
@@ -69,7 +71,7 @@ export default function AddTask({
       className="px-6 py-2 rounded-xl transition-all flex items-center gap-2 hover:bg-white hover:bg-opacity-5"
       style={{ backgroundColor: colorToHex(color) }}
     >
-      <Icon icon="Plus" className="text-xl opacity-80" />
+      <Icon icon="Plus" className="text-xl opacity-80 text-white" />
       <p className="font-bold">Task</p>
     </div>
   );
@@ -94,7 +96,7 @@ export default function AddTask({
         <Popover>
           <PopoverTrigger asChild>
             <div className="flex cursor-pointer items-center gap-2 bg-white bg-opacity-10 border border-white border-opacity-10 rounded-xl px-6 py-2 focus:outline-none font-bold text-gray-300 placeholder:text-neutral-300">
-              <Icon icon="CalendarBlank" />
+              <Icon icon="CalendarBlank" className="text-white" />
               {due ? (
                 <p className="text-neutral-300">{format(due, "dd/MM/yyyy")}</p>
               ) : (
@@ -121,9 +123,9 @@ export default function AddTask({
       >
         Create task
         {isLoading ? (
-          <Icon icon="Spinner" className="animate-spin text-lg" />
+          <Icon icon="Spinner" className="animate-spin text-lg text-white" />
         ) : (
-          <Icon icon="ArrowRight" />
+          <Icon icon="ArrowRight" className="text-white" />
         )}
       </button>
     </form>

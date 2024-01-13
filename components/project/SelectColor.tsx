@@ -28,7 +28,7 @@ export function SelectColor({
             <Icon
               icon="Check"
               className={cn(
-                "text-xl transition-all",
+                "text-xl transition-all text-white",
                 selectedColor === entry[0] ? "opacity-100" : "opacity-0"
               )}
             />

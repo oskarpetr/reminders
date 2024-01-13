@@ -110,9 +110,12 @@ export default function SignIn() {
           >
             Sign in
             {loading ? (
-              <Icon icon="Spinner" className="animate-spin text-lg" />
+              <Icon
+                icon="Spinner"
+                className="animate-spin text-lg text-white"
+              />
             ) : (
-              <Icon icon="ArrowRight" />
+              <Icon icon="ArrowRight" className="text-white" />
             )}
           </button>
         </form>

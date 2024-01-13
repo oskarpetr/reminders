@@ -28,7 +28,7 @@ export function SelectIcon({
                 : null
             )}
           >
-            <Icon icon={icon} className="text-xl" />
+            <Icon icon={icon} className="text-xl text-white" />
           </div>
         );
       })}

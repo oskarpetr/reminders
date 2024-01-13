@@ -183,7 +183,7 @@ export default function SignIn() {
                 >
                   <Icon
                     icon="Camera"
-                    className="text-2xl pointer-events-none cursor-pointer"
+                    className="text-2xl pointer-events-none cursor-pointer text-white"
                   />
                 </div>
               </div>
@@ -252,9 +252,12 @@ export default function SignIn() {
           >
             Sign up
             {isLoading ? (
-              <Icon icon="Spinner" className="animate-spin text-lg" />
+              <Icon
+                icon="Spinner"
+                className="animate-spin text-lg text-white"
+              />
             ) : (
-              <Icon icon="ArrowRight" />
+              <Icon icon="ArrowRight" className="text-white" />
             )}
           </button>
         </form>
