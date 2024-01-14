@@ -3,6 +3,7 @@ import Project from "../components/project/Project";
 import Layout from "@/components/generic/Layout";
 import { useProjects } from "@/context/ProjectsProvider";
 import SkeletonProjects from "@/components/skeleton/SkeletonProjects";
+import SkeletonWidgets from "@/components/skeleton/SkeletonWidgets";
 
 export default function Home() {
   // projects context
@@ -46,15 +47,20 @@ export default function Home() {
       <Headline text="Reminders" />
 
       {loading ? (
-        <div className="flex flex-col gap-4 mt-8">
-          <p className="text-lg font-semibold opacity-50">Recent projects</p>
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="flex flex-col gap-16 mt-16">
+          <div className="flex flex-col gap-4">
+            <p className="text-lg font-semibold opacity-50">Recent projects</p>
             <SkeletonProjects />
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <p className="text-lg font-semibold opacity-50">Widgets</p>
+            <SkeletonWidgets />
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-16">
-          <div className="flex flex-col gap-4 mt-8">
+        <div className="flex flex-col gap-16 mt-16">
+          <div className="flex flex-col gap-4">
             <p className="text-lg font-semibold opacity-50">Recent projects</p>
 
             {projects.length !== 0 ? (
@@ -70,7 +76,7 @@ export default function Home() {
             )}
           </div>
 
-          <div className="flex flex-col gap-4 mt-8">
+          <div className="flex flex-col gap-4">
             <p className="text-lg font-semibold opacity-50">Widgets</p>
 
             <div className="flex gap-6">
