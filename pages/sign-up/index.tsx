@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchCreateAccount } from "@/utils/fetchers";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
+import { toast } from "sonner";
 
 export default function SignIn() {
   // fields states
@@ -106,7 +107,14 @@ export default function SignIn() {
         return;
       }
 
+      if (res.isError) {
+        toast.error("An error has occured.");
+        return;
+      }
+
       router.push("/sign-in");
+
+      toast.success("Your account has been created.");
     }
 
     if (encryptedPassword) {

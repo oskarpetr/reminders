@@ -81,7 +81,12 @@ export default function EditProject({
 
     setErrorIcon(undefined);
 
-    await refetch();
+    const res = await refetch();
+
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
 
     uiEditProject({
       projects,

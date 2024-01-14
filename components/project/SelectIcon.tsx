@@ -20,7 +20,12 @@ export function SelectIcon({
           <div
             key={icon}
             onClick={() => setSelectedIcon(icon)}
-            style={{ backgroundColor: colorToHex(selectedColor!) ?? "gray" }}
+            style={{
+              backgroundColor:
+                selectedColor !== undefined
+                  ? colorToHex(selectedColor!)
+                  : "gray",
+            }}
             className={cn(
               "w-10 h-10 rounded-full cursor-pointer flex items-center justify-center transition-all",
               selectedIcon === icon

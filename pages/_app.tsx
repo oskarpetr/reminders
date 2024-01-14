@@ -17,6 +17,7 @@ export default function App({
       queries: {
         refetchOnWindowFocus: true,
         staleTime: 10000,
+        retry: 1,
       },
     },
   });

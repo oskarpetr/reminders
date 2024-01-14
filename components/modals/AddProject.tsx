@@ -9,10 +9,14 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchCreateProject } from "@/utils/fetchers";
 import { uiCreateProject } from "@/utils/ui-update";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export default function AddProject() {
   // projects context
   const { projects, setProjects } = useProjects();
+
+  // session context
+  const { data: session } = useSession();
 
   // router
   const router = useRouter();
@@ -67,6 +71,11 @@ export default function AddProject() {
 
     const res = await refetch();
 
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
+
     if (res.data) {
       const projectId = res.data.data.data.projectId;
 
@@ -77,6 +86,9 @@ export default function AddProject() {
         name,
         color: selectedColor,
         icon: selectedIcon,
+        accountId: parseInt(session?.user.id as string),
+        accountName: session?.user.name!,
+        accountEmail: session?.user.email!,
       });
 
       setOpen(false);
@@ -88,7 +100,7 @@ export default function AddProject() {
 
   const Trigger = (
     <div className="px-6 py-3 rounded-xl transition-all flex items-center gap-2 hover:bg-white hover:bg-opacity-5">
-      <Icon icon="Plus" className="text-xl opacity-50 text-white" />
+      <Icon icon="Plus" className="text-md opacity-50 text-white" />
       <p className="font-bold opacity-50">Add project</p>
     </div>
   );

@@ -1,3 +1,5 @@
+import { Action } from "@/utils/log";
+
 export interface Task {
   id: number;
   name: string;
@@ -12,7 +14,7 @@ export interface Member {
 }
 
 export interface Log {
-  action: string;
+  action: Action;
   task: string;
   account: string;
   account_id: number;

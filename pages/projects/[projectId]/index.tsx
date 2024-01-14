@@ -33,12 +33,6 @@ export default function Project() {
     (project) => project.id === parseInt(projectId as string)
   );
 
-  useEffect(() => {
-    if (router.isReady && !project) {
-      router.push("/");
-    }
-  }, [router.isReady]);
-
   return (
     routerReady &&
     project && (

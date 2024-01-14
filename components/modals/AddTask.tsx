@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchCreateTask } from "@/utils/fetchers";
 import { uiCreateTask } from "@/utils/ui-update";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export default function AddTask({
   color,
@@ -20,6 +21,9 @@ export default function AddTask({
 }) {
   // projects context
   const { projects, setProjects } = useProjects();
+
+  // session context
+  const { data: session } = useSession();
 
   // fields state
   const [name, setName] = useState("");
@@ -53,6 +57,11 @@ export default function AddTask({
 
     const res = await refetch();
 
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
+
     uiCreateTask({
       projects,
       setProjects,
@@ -60,6 +69,8 @@ export default function AddTask({
       taskId: res.data?.data.data.taskId,
       name,
       due: due!,
+      account: session?.user.name!,
+      accountId: parseInt(session?.user.id as string),
     });
 
     setOpen(false);
@@ -110,7 +121,7 @@ export default function AddTask({
               selected={due}
               onSelect={setDue}
               initialFocus
-              className="bg-neutral-800 rounded-xl border border-white border-opacity-20"
+              className="bg-neutral-800 rounded-xl border border-white border-opacity-20 text-white"
             />
           </PopoverContent>
         </Popover>

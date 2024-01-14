@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchCreateMember, fetchDeleteMember } from "@/utils/fetchers";
 import { uiCreateMember, uiDeleteMember } from "@/utils/ui-update";
 import { toast } from "sonner";
+import MemberList from "../project/MemberList";
 
 export default function Members({
   members,
@@ -65,7 +66,21 @@ export default function Members({
       return;
     }
 
+    const emailDuplicate = members.some(
+      (member) => member.email === newMemberEmail
+    );
+
+    if (emailDuplicate) {
+      setError("Member already exists.");
+      return;
+    }
+
     const res = await createMemberQuery.refetch();
+
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
 
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       setError("This account does not exist.");
@@ -84,8 +99,12 @@ export default function Members({
 
   // delete member
   const deleteMember = async () => {
-    await deleteMemberQuery.refetch();
-    console.log(userHover);
+    const res = await deleteMemberQuery.refetch();
+
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
 
     uiDeleteMember({ projects, setProjects, projectId, id: userHover! });
 
@@ -98,28 +117,10 @@ export default function Members({
         {members.length > 1 ? "Shared with" : "Share project"}
       </p>
 
-      {members.length > 1 ? (
-        <div className="flex">
-          {members.map((user, index) => {
-            return (
-              <Image
-                key={user.id}
-                alt={user.name}
-                className="h-6 w-6 rounded-full border border-white border-opacity-10"
-                width={24}
-                height={24}
-                src={getAvatar(user.id)}
-                style={{
-                  marginRight: index !== members.length - 1 ? "-5px" : "0px",
-                  objectFit: "cover",
-                }}
-              ></Image>
-            );
-          })}
-        </div>
-      ) : (
+      {members.length === 1 && (
         <Icon icon="Export" className="opacity-50 text-lg text-white" />
       )}
+      <MemberList members={members} />
     </div>
   );
 

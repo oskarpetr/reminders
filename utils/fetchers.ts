@@ -92,6 +92,21 @@ export async function fetchEditTask({
   return await axios.patch(`/api/projects/${projectId}/tasks`, editObj);
 }
 
+export async function fetchEditCompletedTask({
+  projectId,
+  id,
+  done,
+}: {
+  projectId: number;
+  id: number;
+  done: boolean;
+}) {
+  return await axios.patch(`/api/projects/${projectId}/tasks`, {
+    id: id,
+    done: done,
+  });
+}
+
 export async function fetchCreateMember({
   projectId,
   newMemberEmail,
@@ -114,4 +129,24 @@ export async function fetchDeleteMember({
   return await axios.delete(`/api/projects/${projectId}/members`, {
     data: { accountId: id },
   });
+}
+
+export async function fetchUpdateProfile({
+  name,
+  id,
+}: {
+  name: string;
+  id: number;
+}) {
+  return await axios.patch(`/api/accounts/${id}/general`, { name });
+}
+
+export async function fetchUpdateAvatar({
+  avatar,
+  id,
+}: {
+  avatar: string;
+  id: number;
+}) {
+  return await axios.patch(`/api/accounts/${id}/avatar`, { avatar });
 }

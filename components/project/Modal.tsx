@@ -28,7 +28,7 @@ export default function Modal({
     >
       <DialogTrigger>{trigger}</DialogTrigger>
 
-      <DialogContent className="bg-transparent border-none p-0">
+      <DialogContent className="bg-transparent border-none p-0 focus:outline-none">
         <div className="bg-neutral-800 border border-gray-700 w-[35rem] px-12 py-8 rounded-xl">
           <div className="flex items-center justify-between mb-8">
             <Headline text={title} action={action} size="h2" margin={false} />

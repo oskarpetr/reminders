@@ -8,6 +8,8 @@ export function uiCreateTask({
   taskId,
   name,
   due,
+  account,
+  accountId,
 }: {
   projects: Project[];
   setProjects: Dispatch<SetStateAction<Project[]>>;
@@ -15,6 +17,8 @@ export function uiCreateTask({
   taskId: number;
   name: string;
   due: Date;
+  account: string;
+  accountId: number;
 }) {
   const projectsCopy = [...projects];
   const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
@@ -23,6 +27,14 @@ export function uiCreateTask({
     name: name,
     due: due,
     done: false,
+  });
+
+  projectsCopy[projectIndex].logs.unshift({
+    action: "TASK-CREATED",
+    date: new Date(),
+    task: name,
+    account,
+    account_id: accountId,
   });
 
   setProjects(projectsCopy);
@@ -35,6 +47,9 @@ export function uiCreateProject({
   name,
   color,
   icon,
+  accountId,
+  accountName,
+  accountEmail,
 }: {
   projects: Project[];
   setProjects: Dispatch<SetStateAction<Project[]>>;
@@ -42,6 +57,9 @@ export function uiCreateProject({
   name: string;
   color: string;
   icon: string;
+  accountId: number;
+  accountName: string;
+  accountEmail: string;
 }) {
   const projectsCopy = [...projects];
   projectsCopy.push({
@@ -50,7 +68,13 @@ export function uiCreateProject({
     color,
     icon,
     tasks: [],
-    members: [],
+    members: [
+      {
+        id: accountId,
+        name: accountName,
+        email: accountEmail,
+      },
+    ],
     logs: [],
   });
 
@@ -126,15 +150,19 @@ export function uiEditTask({
   setProjects,
   projectId,
   taskId,
-  editName,
-  editDue,
+  editObj,
+  account,
+  accountId,
+  taskName,
 }: {
   projects: Project[];
   setProjects: Dispatch<SetStateAction<Project[]>>;
   projectId: number;
   taskId: number;
-  editName: string;
-  editDue: Date;
+  editObj: { editName?: string; editDue?: Date };
+  account: string;
+  accountId: number;
+  taskName: string;
 }) {
   const projectsCopy = [...projects];
   const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
@@ -142,8 +170,67 @@ export function uiEditTask({
     (task) => task.id === taskId
   );
 
-  projectsCopy[projectIndex].tasks[taskIndex].name = editName;
-  projectsCopy[projectIndex].tasks[taskIndex].due = editDue;
+  if (editObj.editName !== undefined) {
+    projectsCopy[projectIndex].tasks[taskIndex].name = editObj.editName;
+
+    projectsCopy[projectIndex].logs.unshift({
+      action: "TASK-RENAMED",
+      date: new Date(),
+      task: taskName,
+      account,
+      account_id: accountId,
+    });
+  }
+
+  if (editObj.editDue !== undefined) {
+    projectsCopy[projectIndex].tasks[taskIndex].due = editObj.editDue!;
+
+    projectsCopy[projectIndex].logs.unshift({
+      action: "TASK-DUE",
+      date: new Date(),
+      task: taskName,
+      account,
+      account_id: accountId,
+    });
+  }
+
+  setProjects(projectsCopy);
+}
+
+export function uiEditCompletedTask({
+  projects,
+  setProjects,
+  projectId,
+  id,
+  done,
+  account,
+  accountId,
+  taskName,
+}: {
+  projects: Project[];
+  setProjects: Dispatch<SetStateAction<Project[]>>;
+  projectId: number;
+  id: number;
+  done: boolean;
+  account: string;
+  accountId: number;
+  taskName: string;
+}) {
+  const projectsCopy = [...projects!];
+  const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
+  const taskIndex = projectsCopy[projectIndex].tasks.findIndex(
+    (task) => task.id === id
+  );
+
+  projectsCopy[projectIndex].tasks[taskIndex].done = done;
+
+  projectsCopy[projectIndex].logs.unshift({
+    action: done ? "TASK-COMPLETED" : "TASK-UNCOMPLETED",
+    date: new Date(),
+    task: taskName,
+    account,
+    account_id: accountId,
+  });
 
   setProjects(projectsCopy);
 }

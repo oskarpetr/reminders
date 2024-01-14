@@ -36,7 +36,12 @@ export default function DeleteTask({
 
     if (isLoading) return;
 
-    await refetch();
+    const res = await refetch();
+
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
 
     uiDeleteTask({ projects, setProjects, projectId, taskId });
 

@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { toast } from "sonner";
 
 export default function SignIn() {
   // router
@@ -58,6 +59,7 @@ export default function SignIn() {
 
     if (signInRes?.ok) {
       router.push(signInRes.url!);
+      toast.success("You have been signed in.");
     } else {
       if (signInRes?.status === 401) {
         setErrorPassword("Wrong password.");

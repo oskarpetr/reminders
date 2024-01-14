@@ -31,7 +31,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
       action: "/profile",
     },
     {
-      name: "Logout",
+      name: "Log out",
       icon: "SignOut",
       action: () => signOut(),
     },
@@ -47,7 +47,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
     <div className="w-[25rem] h-screen bg-white bg-opacity-5 fixed px-10 py-20 flex flex-col border-r border-white border-opacity-10">
       <Link
         href={"/profile"}
-        className="flex gap-4 items-center px-6 py-4 bg-white bg-opacity-10 hover:bg-opacity-[15%] transition-all rounded-xl border border-white border-opacity-10"
+        className="flex gap-4 items-center px-6 py-4 bg-white bg-opacity-5 hover:bg-opacity-[8%] transition-all rounded-xl border border-white border-opacity-10"
       >
         {session?.user ? (
           <>
@@ -111,7 +111,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
                     "px-6 py-3 rounded-xl transition-all flex items-center gap-2",
                     path !== item.action
                       ? "hover:bg-white hover:bg-opacity-5"
-                      : "bg-white bg-opacity-20"
+                      : "bg-primary"
                   )}
                 >
                   <Icon
@@ -141,9 +141,9 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
       </div>
 
       <div className="flex flex-col gap-4 mt-8">
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-3 items-center">
           <p className="font-bold opacity-50">Projects</p>
-          <p className="font-bold text-gray-300 bg-white bg-opacity-20 rounded-full px-2 text-sm">
+          <p className="font-bold bg-white bg-opacity-20 border border-white border-opacity-20 rounded-full px-2 text-sm">
             {projects.length}
           </p>
         </div>
@@ -180,6 +180,8 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
                   </Link>
                 );
               })}
+
+          <div className="my-2 border-b mx-6 border-white border-opacity-10"></div>
 
           <AddProject />
         </div>

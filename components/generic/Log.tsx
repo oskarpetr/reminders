@@ -1,6 +1,7 @@
 import { Log } from "@/types/Project.types";
 import { getAvatar } from "@/utils/avatar";
 import { Action, getAction } from "@/utils/log";
+import { format } from "date-fns";
 import Image from "next/image";
 
 export default function Log({ log, last }: { log: Log; last: boolean }) {
@@ -18,7 +19,7 @@ export default function Log({ log, last }: { log: Log; last: boolean }) {
 
         <div>
           <p className="font-bold opacity-50 text-sm">
-            {new Date(log.date).toLocaleString()}
+            {format(new Date(log.date), "dd MMMM yyyy, HH:mm", {})}
           </p>
           <p className="tracking-wide">
             <span className="font-bold">{log.account}</span>{" "}

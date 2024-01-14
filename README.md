@@ -11,6 +11,15 @@ Reminders is an intuitive task-tracking app designed to enhance your productivit
 - PostgreSQL
 - REST API
 
+## Key features
+
+- Home screen widgets
+- Intuitive deadline overview
+- Easy management for tasks, projects and members
+- Logs overview
+- Profile info and avatar editor
+- 16 API endpoints
+
 ## 1. Creating an account
 
 Users can create their new account, once they reach the website. They will be automatically redirected to a **Sign in** page. If a user does not have already an existing account, they can click on the **Register** link below the sign-in form. To register a new account, the user must fill in the name, email, and password field, and also upload an avatar for their account profile picture.
@@ -86,3 +95,7 @@ Removing a member from the list of members to whom have been the project shared,
 When each of these actions is performed on the client, a new log is every time registered in the database. You can view these logs in your project's dashboard when clicking on the **Rounded arrow** button.
 
 ![image](https://github.com/oskarpetr/reminders/assets/64423998/a510f026-6ecc-42e7-9afd-aba90799d148)
+
+## 7. Profile
+
+If you want edit your account information, you can visit the profile section in the sidebar. Here, you can change your avatar by pressing the **Upload avatar** button or change your name in the name field, and then submiting the changes with the **Save changes**.

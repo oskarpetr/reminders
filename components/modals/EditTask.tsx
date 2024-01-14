@@ -1,6 +1,12 @@
 import Icon from "../generic/Icon";
 import Modal from "../project/Modal";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { useProjects } from "@/context/ProjectsProvider";
 import { sqlDate } from "@/utils/date";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -11,6 +17,7 @@ import { uiEditTask } from "@/utils/ui-update";
 import { fetchEditTask } from "@/utils/fetchers";
 import { cn } from "@/utils/cn";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export default function EditTask({
   taskId,
@@ -29,6 +36,9 @@ export default function EditTask({
 }) {
   // projects context
   const { projects, setProjects } = useProjects();
+
+  // session context
+  const { data: session } = useSession();
 
   // edit fields states
   const [editName, setEditName] = useState(name);
@@ -86,16 +96,26 @@ export default function EditTask({
     }
 
     setEditObj(edit);
+  };
 
-    await refetch();
+  // api call
+  const apiCall = async () => {
+    const res = await refetch();
+
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
 
     uiEditTask({
       projects,
       setProjects,
       projectId,
       taskId,
-      editName,
-      editDue: editDue!,
+      editObj: { editName: editObj?.name, editDue: new Date(editObj?.due!) },
+      account: session?.user.name!,
+      accountId: parseInt(session?.user.id as string),
+      taskName: name,
     });
 
     setTaskHover(undefined);
@@ -103,6 +123,10 @@ export default function EditTask({
 
     toast.success("Task has been edited.");
   };
+
+  useEffect(() => {
+    if (editObj !== undefined) apiCall();
+  }, [editObj]);
 
   const Trigger = (
     <Icon
@@ -150,7 +174,7 @@ export default function EditTask({
               selected={editDue}
               onSelect={setEditDue}
               initialFocus
-              className="bg-neutral-800 rounded-xl border border-white border-opacity-20"
+              className="bg-neutral-800 rounded-xl border border-white border-opacity-20 text-white"
             />
           </PopoverContent>
         </Popover>

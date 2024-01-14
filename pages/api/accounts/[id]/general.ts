@@ -19,7 +19,7 @@ export default async function handler(
         body.name
       } WHERE id = ${id?.toString()}`;
 
-      return response.status(200);
+      return response.status(200).json({});
     } catch (error) {
       return response.status(500).json({ error });
     }

@@ -1,10 +1,14 @@
 import Headline from "@/components/generic/Headline";
+import Icon from "@/components/generic/Icon";
 import Layout from "@/components/generic/Layout";
 import { getAvatar } from "@/utils/avatar";
+import { fetchUpdateProfile } from "@/utils/fetchers";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export default function Profile() {
   // session context
@@ -23,8 +27,32 @@ export default function Profile() {
   // avatar ref
   const avatarRef = useRef<HTMLInputElement>(null);
 
+  // query
+  const updateProfileQuery = useQuery({
+    queryKey: ["update-profile"],
+    queryFn: () =>
+      fetchUpdateProfile({
+        name: name!,
+        id: parseInt(session?.user?.id as string),
+      }),
+    enabled: false,
+  });
+
+  // query
+  const updateAvatarQuery = useQuery({
+    queryKey: ["update-avatar"],
+    queryFn: () =>
+      fetchUpdateProfile({
+        name: name!,
+        id: parseInt(session?.user?.id as string),
+      }),
+    enabled: false,
+  });
+
   // edit profile
   const editProfile = async () => {
+    if (updateProfileQuery.isLoading) return;
+
     if (name === "") {
       setErrorName("Name cannot be empty.");
       return;
@@ -32,10 +60,14 @@ export default function Profile() {
 
     setErrorName(undefined);
 
-    await axios.patch(
-      `/api/accounts/${parseInt(session?.user?.id as string)}/general`,
-      { name: name }
-    );
+    const res = await updateProfileQuery.refetch();
+
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
+
+    toast.success("Your account has been updated.");
   };
 
   // convert file to base 64 string
@@ -46,6 +78,8 @@ export default function Profile() {
   // change avatar
   useEffect(() => {
     async function updateAvatar() {
+      if (updateAvatarQuery.isLoading) return;
+
       if (file === undefined) {
         setErrorFile("Select an avatar.");
         return;
@@ -59,10 +93,14 @@ export default function Profile() {
 
       setErrorFile(undefined);
 
-      await axios.patch(
-        `/api/accounts/${parseInt(session?.user?.id as string)}/avatar`,
-        { avatar: avatar }
-      );
+      const res = await updateAvatarQuery.refetch();
+
+      if (res.isError) {
+        toast.error("An error has occured.");
+        return;
+      }
+
+      toast.success("Your avatar has been updated.");
     }
 
     if (avatar) {
@@ -107,10 +145,17 @@ export default function Profile() {
               <div className="flex flex-col gap-2">
                 <p className="font-bold">Avatar image</p>
                 <button
-                  className="px-6 py-2 rounded-xl bg-white text-black font-semibold cursor-pointer"
+                  className="px-6 py-2 disabled:bg-neutral-200 rounded-xl flex items-center gap-2 justify-center bg-white text-black font-semibold cursor-pointer"
+                  disabled={updateAvatarQuery.isLoading}
                   onClick={() => avatarRef.current?.click()}
                 >
                   Upload avatar
+                  {updateAvatarQuery.isLoading && (
+                    <Icon
+                      icon="Spinner"
+                      className="animate-spin text-lg text-black"
+                    />
+                  )}
                 </button>
 
                 <input
@@ -157,10 +202,17 @@ export default function Profile() {
 
           <div className="flex flex-col gap-4 text-center">
             <button
-              className="px-6 py-2 w-full rounded-xl bg-white text-black font-semibold mt-4"
+              className="px-6 py-2 disabled:bg-neutral-200 flex items-center gap-2 justify-center w-full rounded-xl bg-white text-black font-semibold mt-4"
+              disabled={updateProfileQuery.isLoading}
               onClick={editProfile}
             >
               Save changes
+              {updateProfileQuery.isLoading && (
+                <Icon
+                  icon="Spinner"
+                  className="animate-spin text-lg text-black"
+                />
+              )}
             </button>
             <p className="opacity-50 font-bold">
               Account changes will take place after loggin back in.

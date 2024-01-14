@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProjectIcon from "./ProjectIcon";
 import { Project } from "@/types/Project.types";
+import MemberList from "./MemberList";
 
 export default function Project({ project }: { project: Project }) {
   const tasksDue = project.tasks.filter((task) => !task.done);
@@ -13,15 +14,19 @@ export default function Project({ project }: { project: Project }) {
 
           <div className="flex flex-col">
             <p className="text-white font-bold text-xl">{project.name}</p>
-            {project.tasks.length > 0 ? (
+            {tasksDue.length > 0 ? (
               <p className="text-white font-bold text-opacity-50">
                 {tasksDue.length} {tasksDue.length === 1 ? "Task" : "Tasks"} due
               </p>
             ) : (
-              <p className="text-white font-bold text-opacity-50">No tasks</p>
+              <p className="text-white font-bold text-opacity-50">
+                No tasks due
+              </p>
             )}
           </div>
         </div>
+
+        <MemberList members={project.members} />
       </div>
     </Link>
   );

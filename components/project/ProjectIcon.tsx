@@ -10,7 +10,7 @@ export default function ProjectIcon({
 }) {
   return (
     <div
-      className="h-10 w-10 rounded-full flex justify-center items-center"
+      className="h-10 w-10 rounded-full flex justify-center items-center border border-white border-opacity-20"
       style={{ backgroundColor: colorToHex(color) }}
     >
       <Icon icon={icon} className="text-white text-xl" />

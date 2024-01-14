@@ -5,6 +5,18 @@ import { useProjects } from "@/context/ProjectsProvider";
 import EditTask from "../modals/EditTask";
 import axios from "axios";
 import DeleteTask from "../modals/DeleteTask";
+import {
+  addMonths,
+  format,
+  formatDistance,
+  intlFormatDistance,
+  isAfter,
+} from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { fetchEditCompletedTask } from "@/utils/fetchers";
+import { uiEditCompletedTask } from "@/utils/ui-update";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 export default function Task({
   id,
@@ -24,28 +36,45 @@ export default function Task({
   // projects context
   const { projects, setProjects } = useProjects();
 
+  // session context
+  const { data: session } = useSession();
+
   // task done state
   const [taskDone, setTaskDone] = useState(done);
 
   // task hover state
   const [taskHover, setTaskHover] = useState<number>();
 
+  // date variables
+  const dateIsInPast = new Date(due).getTime() < new Date().getTime();
+  const monthIntoFuture = isAfter(due, addMonths(new Date(), 1));
+
+  // query
+  const { refetch, isLoading } = useQuery({
+    queryKey: ["add-task"],
+    queryFn: () => fetchEditCompletedTask({ projectId, id, done: !done }),
+    enabled: false,
+  });
+
   // edit task
-  const editTask = () => {
-    axios.patch(`/api/projects/${projectId}/tasks`, {
-      id: id,
+  const editTask = async () => {
+    const res = await refetch();
+
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
+
+    uiEditCompletedTask({
+      projects,
+      setProjects,
+      projectId,
+      id,
       done: !done,
+      account: session?.user.name!,
+      accountId: parseInt(session?.user.id as string),
+      taskName: name,
     });
-
-    const projectsCopy = [...projects!];
-    const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
-    const taskIndex = projectsCopy[projectIndex].tasks.findIndex(
-      (task) => task.id === id
-    );
-
-    projectsCopy[projectIndex].tasks[taskIndex].done = !done;
-
-    setProjects(projectsCopy);
   };
 
   return (
@@ -83,8 +112,22 @@ export default function Task({
           >
             {name}
           </p>
-          <p className="text-gray-500 font-bold">
-            {new Date(due).toLocaleDateString("en-GB")}
+          <p
+            className={`font-bold flex gap-2 ${
+              dateIsInPast && !done
+                ? "text-red-400 text-opacity-70"
+                : "text-gray-500"
+            }`}
+          >
+            {monthIntoFuture ? (
+              <>
+                <span>{format(new Date(due), "dd MMMM, yyyy")}</span>
+                <span>•</span>
+                <span>{intlFormatDistance(new Date(due), new Date())}</span>
+              </>
+            ) : (
+              intlFormatDistance(new Date(due), new Date())
+            )}
           </p>
         </div>
       </div>

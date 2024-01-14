@@ -35,7 +35,12 @@ export default function DeleteProject({
 
     if (isLoading) return;
 
-    await refetch();
+    const res = await refetch();
+
+    if (res.isError) {
+      toast.error("An error has occured.");
+      return;
+    }
 
     uiDeleteProject({ projects, setProjects, projectId });
 
