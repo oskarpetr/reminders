@@ -1,6 +1,5 @@
 import { Member } from "@/types/Project.types";
 import { getAvatar } from "@/utils/avatar";
-import Image from "next/image";
 
 export default function MemberList({ members }: { members: Member[] }) {
   return (
@@ -8,7 +7,7 @@ export default function MemberList({ members }: { members: Member[] }) {
       <div className="flex items-center">
         {members.slice(0, 3).map((user, index) => {
           return (
-            <Image
+            <img
               key={user.id}
               alt={user.name}
               className="h-6 w-6 rounded-full border border-white border-opacity-10"

@@ -1,12 +1,9 @@
 import Headline from "@/components/generic/Headline";
 import Icon from "@/components/generic/Icon";
 import Layout from "@/components/generic/Layout";
-import { getAvatar } from "@/utils/avatar";
 import { fetchUpdateAvatar, fetchUpdateProfile } from "@/utils/fetchers";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -134,7 +131,7 @@ export default function Profile() {
         <div className="flex flex-col gap-8 w-[30rem]">
           <div>
             <div className="flex items-center gap-8">
-              <Image
+              <img
                 src={avatar ? avatar : session?.user?.image!}
                 alt="Avatar"
                 height={96}
@@ -142,6 +139,7 @@ export default function Profile() {
                 className="rounded-full w-24 h-24 border border-white border-opacity-10"
                 style={{ objectFit: "cover" }}
               />
+
               <div className="flex flex-col gap-2">
                 <p className="font-bold">Avatar image</p>
                 <button

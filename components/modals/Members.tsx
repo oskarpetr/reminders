@@ -5,7 +5,6 @@ import { cn } from "@/utils/cn";
 import { Member } from "@/types/Project.types";
 import axios from "axios";
 import { useProjects } from "@/context/ProjectsProvider";
-import Image from "next/image";
 import { getAvatar } from "@/utils/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCreateMember, fetchDeleteMember } from "@/utils/fetchers";
@@ -135,7 +134,7 @@ export default function Members({
               className="flex justify-between items-center"
             >
               <div className="flex gap-4 items-center">
-                <Image
+                <img
                   src={getAvatar(user.id)}
                   alt={user.name}
                   height={48}

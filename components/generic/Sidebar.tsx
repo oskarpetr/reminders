@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import AddProject from "../modals/AddProject";
 import { useProjects } from "@/context/ProjectsProvider";
 import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 import { getAvatar } from "@/utils/avatar";
 import Skeleton from "react-loading-skeleton";
 
@@ -51,7 +50,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
       >
         {session?.user ? (
           <>
-            <Image
+            <img
               src={getAvatar(parseInt(userId as string))}
               alt="Avatar"
               className="h-12 w-12 rounded-full border border-white border-opacity-10"
