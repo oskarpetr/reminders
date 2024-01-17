@@ -8,7 +8,7 @@ export default function Project({ project }: { project: Project }) {
 
   return (
     <Link href={`/projects/${project.id}`}>
-      <div className="py-5 px-8 flex justify-between items-center bg-white bg-opacity-5 rounded-2xl border border-white border-opacity-10">
+      <div className="py-5 px-8 flex justify-between items-center bg-white hover:bg-opacity-[7%] bg-opacity-5 transition-all rounded-2xl border-[0.5px] border-white border-opacity-10">
         <div className="flex gap-4 items-center">
           <ProjectIcon color={project.color} icon={project.icon} />
 

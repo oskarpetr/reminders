@@ -1,13 +1,20 @@
 import { Log as LogType } from "@/types/Project.types";
 import Icon from "../generic/Icon";
-import Modal from "../project/Modal";
+import Modal from "../generic/Modal";
 import Log from "../generic/Log";
+import Tooltip from "../generic/Tooltip";
 
 export default function Logs({ logs }: { logs: LogType[] }) {
   const Trigger = (
-    <Icon
-      icon="ArrowClockwise"
-      className="opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none text-white"
+    <Tooltip
+      trigger={
+        <Icon
+          icon="ArrowClockwise"
+          className="opacity-50 w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none text-white"
+        />
+      }
+      content="Logs"
+      direction="bottom"
     />
   );
 

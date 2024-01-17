@@ -3,20 +3,14 @@ import colorToHex from "@/utils/colors";
 import { useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
 import EditTask from "../modals/EditTask";
-import axios from "axios";
 import DeleteTask from "../modals/DeleteTask";
-import {
-  addMonths,
-  format,
-  formatDistance,
-  intlFormatDistance,
-  isAfter,
-} from "date-fns";
+import { format, intlFormatDistance } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEditCompletedTask } from "@/utils/fetchers";
 import { uiEditCompletedTask } from "@/utils/ui-update";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import Tooltip from "../generic/Tooltip";
 
 export default function Task({
   id,
@@ -47,7 +41,6 @@ export default function Task({
 
   // date variables
   const dateIsInPast = new Date(due).getTime() < new Date().getTime();
-  const monthIntoFuture = isAfter(due, addMonths(new Date(), 1));
 
   // query
   const { refetch, isLoading } = useQuery({
@@ -82,7 +75,7 @@ export default function Task({
       key={id}
       onMouseEnter={() => setTaskHover(id)}
       onMouseLeave={() => setTaskHover(undefined)}
-      className="flex items-center justify-between border-b border-white border-opacity-10"
+      className="flex items-center justify-between border-b border-white border-opacity-5"
     >
       <div
         className="py-4 flex gap-4 items-center cursor-pointer select-none"
@@ -91,17 +84,23 @@ export default function Task({
           setTaskDone((prev) => !prev);
         }}
       >
-        <div className="h-5 w-5 rounded-full border border-gray-500 flex justify-center items-center">
-          <div
-            className={cn(
-              "w-4 h-4 bg-white rounded-full transition-all",
-              taskDone ? "opacity-100" : "opacity-0"
-            )}
-            style={{
-              background: colorToHex(color),
-            }}
-          ></div>
-        </div>
+        <Tooltip
+          trigger={
+            <div className="h-5 w-5 rounded-full border border-gray-500 flex justify-center items-center">
+              <div
+                className={cn(
+                  "w-4 h-4 bg-white rounded-full transition-all",
+                  taskDone ? "opacity-100" : "opacity-0"
+                )}
+                style={{
+                  background: colorToHex(color),
+                }}
+              ></div>
+            </div>
+          }
+          content={!done ? "Complete" : "Uncomplete"}
+          direction="bottom"
+        />
 
         <div>
           <p
@@ -112,23 +111,22 @@ export default function Task({
           >
             {name}
           </p>
-          <p
-            className={`font-bold flex gap-2 ${
-              dateIsInPast && !done
-                ? "text-red-400 text-opacity-70"
-                : "text-gray-500"
-            }`}
-          >
-            {monthIntoFuture ? (
-              <>
-                <span>{format(new Date(due), "dd MMMM, yyyy")}</span>
-                <span>•</span>
-                <span>{intlFormatDistance(new Date(due), new Date())}</span>
-              </>
-            ) : (
-              intlFormatDistance(new Date(due), new Date())
-            )}
-          </p>
+
+          <Tooltip
+            trigger={
+              <p
+                className={`font-bold flex gap-2 ${
+                  dateIsInPast && !done
+                    ? "text-red-400 text-opacity-60"
+                    : "text-neutral-500 text-opacity-90"
+                }`}
+              >
+                {intlFormatDistance(new Date(due), new Date())}
+              </p>
+            }
+            content={format(new Date(due), "d MMMM, yyyy")}
+            direction="right"
+          />
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Icon from "../generic/Icon";
-import Modal from "../project/Modal";
+import Modal from "../generic/Modal";
 import { useProjects } from "@/context/ProjectsProvider";
 import { cn } from "@/utils/cn";
 import { fetchDeleteTask } from "@/utils/fetchers";
@@ -8,6 +8,7 @@ import { uiDeleteTask } from "@/utils/ui-update";
 import { FormEvent } from "react";
 import { DialogClose } from "../ui/Dialog";
 import { toast } from "sonner";
+import Tooltip from "../generic/Tooltip";
 
 export default function DeleteTask({
   taskId,
@@ -49,12 +50,18 @@ export default function DeleteTask({
   };
 
   const Trigger = (
-    <Icon
-      icon="TrashSimple"
-      className={cn(
-        "opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
-        taskId === taskHover ? "opacity-50" : "opacity-0"
-      )}
+    <Tooltip
+      trigger={
+        <Icon
+          icon="Trash"
+          className={cn(
+            "opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
+            taskId === taskHover ? "opacity-50" : "opacity-0"
+          )}
+        />
+      }
+      content="Delete task"
+      direction="bottom"
     />
   );
 

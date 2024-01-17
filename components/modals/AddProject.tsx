@@ -1,5 +1,5 @@
 import Icon from "../generic/Icon";
-import Modal from "../project/Modal";
+import Modal from "../generic/Modal";
 import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
 import { useRouter } from "next/navigation";

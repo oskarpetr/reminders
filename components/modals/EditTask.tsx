@@ -1,5 +1,5 @@
 import Icon from "../generic/Icon";
-import Modal from "../project/Modal";
+import Modal from "../generic/Modal";
 import {
   Dispatch,
   FormEvent,
@@ -18,6 +18,7 @@ import { fetchEditTask } from "@/utils/fetchers";
 import { cn } from "@/utils/cn";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import Tooltip from "../generic/Tooltip";
 
 export default function EditTask({
   taskId,
@@ -129,12 +130,18 @@ export default function EditTask({
   }, [editObj]);
 
   const Trigger = (
-    <Icon
-      icon="PencilSimple"
-      className={cn(
-        "opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
-        taskId === taskHover ? "opacity-50" : "opacity-0"
-      )}
+    <Tooltip
+      trigger={
+        <Icon
+          icon="GearSix"
+          className={cn(
+            "opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none",
+            taskId === taskHover ? "opacity-50" : "opacity-0"
+          )}
+        />
+      }
+      content="Edit task"
+      direction="bottom"
     />
   );
 

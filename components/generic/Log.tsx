@@ -18,12 +18,12 @@ export default function Log({ log, last }: { log: Log; last: boolean }) {
         />
 
         <div>
-          <p className="font-bold opacity-50 text-sm">
-            {format(new Date(log.date), "dd MMMM yyyy, HH:mm", {})}
+          <p className="font-bold opacity-40 text-sm">
+            {format(new Date(log.date), "d MMMM, yyyy — HH:mm")}
           </p>
           <p className="tracking-wide">
             <span className="font-bold">{log.account}</span>{" "}
-            <span className="opacity-75">
+            <span className="opacity-80">
               {getAction(log.action as Action)}
             </span>{" "}
             <span className="font-bold">&quot;{log.task}&quot;</span>.

@@ -1,5 +1,5 @@
 import Icon from "../generic/Icon";
-import Modal from "../project/Modal";
+import Modal from "../generic/Modal";
 import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
 import { SelectIcon } from "../project/SelectIcon";
@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchEditProject } from "@/utils/fetchers";
 import { uiEditProject } from "@/utils/ui-update";
 import { toast } from "sonner";
+import Tooltip from "../generic/Tooltip";
 
 export default function EditProject({
   name,
@@ -103,9 +104,15 @@ export default function EditProject({
   };
 
   const Trigger = (
-    <Icon
-      icon="GearSix"
-      className="opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none"
+    <Tooltip
+      trigger={
+        <Icon
+          icon="GearSix"
+          className="opacity-50 text-white w-5 h-5 cursor-pointer transition-all focus:outline-none outline-none"
+        />
+      }
+      content="Edit project"
+      direction="bottom"
     />
   );
 

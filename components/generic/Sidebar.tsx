@@ -44,10 +44,10 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
   const userId = session?.user?.id;
 
   return (
-    <div className="w-[25rem] h-screen bg-white bg-opacity-5 fixed px-10 py-20 flex flex-col border-r border-white border-opacity-10">
+    <div className="w-[25rem] h-screen bg-white bg-opacity-5 fixed px-10 py-20 flex flex-col border-r-[0.5px] border-white border-opacity-10">
       <Link
         href={"/profile"}
-        className="flex gap-4 items-center px-6 py-4 bg-white bg-opacity-5 hover:bg-opacity-[8%] transition-all rounded-xl border border-white border-opacity-10"
+        className="flex gap-4 items-center px-6 py-4 bg-white bg-opacity-5 hover:bg-opacity-[8%] transition-all rounded-xl border-[0.5px] border-white border-opacity-10"
       >
         {session?.user ? (
           <>
@@ -111,12 +111,12 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
                     "px-6 py-3 rounded-xl transition-all flex items-center gap-2",
                     path !== item.action
                       ? "hover:bg-white hover:bg-opacity-5"
-                      : "bg-primary"
+                      : "bg-primary bg-opacity-80"
                   )}
                 >
                   <Icon
                     icon={item.icon}
-                    className="text-xl opacity-80 text-white"
+                    className="text-lg opacity-70 text-white"
                   />
                   <p className="font-bold">{item.name}</p>
                 </Link>
@@ -130,7 +130,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
                 >
                   <Icon
                     icon={item.icon}
-                    className="text-xl opacity-80 text-white"
+                    className="text-lg opacity-70 text-white"
                   />
                   <p className="font-bold">{item.name}</p>
                 </button>
@@ -143,7 +143,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
       <div className="flex flex-col gap-4 mt-8">
         <div className="flex gap-3 items-center">
           <p className="font-bold opacity-50">Projects</p>
-          <p className="font-bold bg-white bg-opacity-20 border border-white border-opacity-20 rounded-full px-2 text-sm">
+          <p className="font-bold bg-white bg-opacity-20 border-[0.5px] py-0.5 border-white border-opacity-10 rounded-full px-2 text-sm">
             {projects.length}
           </p>
         </div>
@@ -174,7 +174,7 @@ export default function Sidebar({ project }: { project: Project | undefined }) {
                   >
                     <Icon
                       icon={proj.icon}
-                      className="text-xl opacity-80 text-white"
+                      className="text-lg opacity-70 text-white"
                     />
                     <p className="font-bold">{proj.name}</p>
                   </Link>

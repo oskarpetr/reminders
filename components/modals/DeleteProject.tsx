@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Icon from "../generic/Icon";
-import Modal from "../project/Modal";
+import Modal from "../generic/Modal";
 import { useProjects } from "@/context/ProjectsProvider";
 import { useRouter } from "next/router";
 import { FormEvent } from "react";
@@ -51,7 +51,7 @@ export default function DeleteProject({
 
   const Trigger = (
     <button className="px-6 py-2 rounded-xl transition-all flex items-center gap-2 bg-white bg-opacity-10 hover:bg-white hover:bg-opacity-20">
-      <Icon icon="TrashSimple" className="text-xl opacity-80 text-white" />
+      <Icon icon="Trash" className="text-xl opacity-80 text-white" />
       <p className="font-bold">Delete</p>
     </button>
   );

@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs-react";
 import { DefaultSession, NextAuthOptions } from "next-auth";
 import { getAvatar } from "./avatar";
 import { JWT } from "next-auth/jwt";
+import axios, { AxiosError } from "axios";
+import { NextResponse } from "next/server";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,7 +15,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         try {
           if (!credentials || !credentials?.email || !credentials.password)
             return null;
@@ -47,6 +49,11 @@ export const authOptions: NextAuthOptions = {
             image: getAvatar(user.id),
           };
         } catch (error) {
+          if (axios.isAxiosError(error)) {
+            console.log(error.message);
+            return null;
+          }
+
           return null;
         }
       },

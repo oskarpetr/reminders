@@ -1,6 +1,6 @@
 import colorToHex from "@/utils/colors";
 import Icon from "../generic/Icon";
-import Modal from "../project/Modal";
+import Modal from "../generic/Modal";
 import { FormEvent, useState } from "react";
 import { useProjects } from "@/context/ProjectsProvider";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -79,10 +79,10 @@ export default function AddTask({
 
   const Trigger = (
     <div
-      className="px-6 py-2 rounded-xl transition-all flex items-center gap-2 hover:bg-white hover:bg-opacity-5"
+      className="px-6 py-2 rounded-xl transition-all flex items-center gap-1 hover:bg-white hover:bg-opacity-5"
       style={{ backgroundColor: colorToHex(color) }}
     >
-      <Icon icon="Plus" className="text-xl opacity-80 text-white" />
+      <Icon icon="Plus" className="text-lg opacity-80 text-white" />
       <p className="font-bold">Task</p>
     </div>
   );

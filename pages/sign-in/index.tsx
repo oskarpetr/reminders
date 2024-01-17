@@ -60,9 +60,12 @@ export default function SignIn() {
     if (signInRes?.ok) {
       router.push(signInRes.url!);
       toast.success("You have been signed in.");
-    } else {
+    } else if (signInRes?.error) {
+      console.log(signInRes);
       if (signInRes?.status === 401) {
-        setErrorPassword("Wrong password.");
+        toast.error("Wrong password.");
+      } else if (signInRes?.status === 404) {
+        toast.error("Email address does not exist.");
       }
     }
 

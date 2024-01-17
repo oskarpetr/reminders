@@ -13,7 +13,6 @@ import { sortTasksByDate } from "@/utils/date";
 import Members from "@/components/modals/Members";
 import EditProject from "@/components/modals/EditProject";
 import Logs from "@/components/modals/Logs";
-import { useEffect } from "react";
 
 export default function Project() {
   // projects context

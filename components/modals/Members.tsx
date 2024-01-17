@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import Icon from "../generic/Icon";
-import Modal from "../project/Modal";
+import Modal from "../generic/Modal";
 import { cn } from "@/utils/cn";
 import { Member } from "@/types/Project.types";
 import axios from "axios";

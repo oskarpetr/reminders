@@ -4,6 +4,7 @@ import Layout from "@/components/generic/Layout";
 import { useProjects } from "@/context/ProjectsProvider";
 import SkeletonProjects from "@/components/skeleton/SkeletonProjects";
 import SkeletonWidgets from "@/components/skeleton/SkeletonWidgets";
+import Icon from "@/components/generic/Icon";
 
 export default function Home() {
   // projects context
@@ -33,7 +34,7 @@ export default function Home() {
       value: tasksCompleted,
     },
     {
-      title: "Tasks still due",
+      title: "Tasks due",
       value: tasksDue,
     },
     {
@@ -65,7 +66,7 @@ export default function Home() {
 
             {projects.length !== 0 ? (
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {projects.map((project) => {
+                {projects.slice(0, 4).map((project) => {
                   return <Project key={project.id} project={project} />;
                 })}
               </div>
@@ -84,10 +85,10 @@ export default function Home() {
                 return (
                   <div
                     key={widget.title}
-                    className="bg-white bg-opacity-10 w-40 h-40 flex flex-col justify-between rounded-2xl border-white border border-opacity-10 p-6"
+                    className="bg-gradient-to-br from-neutral-700 to-neutral-800 bg-opacity-10 w-40 h-40 flex flex-col justify-between rounded-2xl border-neutral-700 border-[0.5px] p-6"
                   >
                     <p className="font-bold opacity-80">{widget.title}</p>
-                    <p className="font-bold text-4xl">{widget.value} </p>
+                    <p className="font-bold text-4xl">{widget.value}</p>
                   </div>
                 );
               })}
