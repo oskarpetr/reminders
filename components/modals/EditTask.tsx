@@ -112,8 +112,11 @@ export default function EditTask({
       projects,
       setProjects,
       projectId,
-      taskId,
-      editObj: { editName: editObj?.name, editDue: new Date(editObj?.due!) },
+      editObj: {
+        id: editObj?.id!,
+        editName: editObj?.name,
+        editDue: editObj?.due ? new Date(editObj?.due) : undefined,
+      },
       account: session?.user.name!,
       accountId: parseInt(session?.user.id as string),
       taskName: name,

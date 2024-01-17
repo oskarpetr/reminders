@@ -149,7 +149,6 @@ export function uiEditTask({
   projects,
   setProjects,
   projectId,
-  taskId,
   editObj,
   account,
   accountId,
@@ -158,8 +157,7 @@ export function uiEditTask({
   projects: Project[];
   setProjects: Dispatch<SetStateAction<Project[]>>;
   projectId: number;
-  taskId: number;
-  editObj: { editName?: string; editDue?: Date };
+  editObj: { id: number; editName?: string; editDue?: Date };
   account: string;
   accountId: number;
   taskName: string;
@@ -167,9 +165,10 @@ export function uiEditTask({
   const projectsCopy = [...projects];
   const projectIndex = projectsCopy.findIndex((p) => p.id === projectId);
   const taskIndex = projectsCopy[projectIndex].tasks.findIndex(
-    (task) => task.id === taskId
+    (task) => task.id === editObj.id
   );
-
+  console.log(editObj.editDue);
+  console.log(editObj.editName);
   if (editObj.editName !== undefined) {
     projectsCopy[projectIndex].tasks[taskIndex].name = editObj.editName;
 

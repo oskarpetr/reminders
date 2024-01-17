@@ -20,6 +20,27 @@ Reminders is an intuitive task-tracking app designed to enhance your productivit
 - Profile info and avatar editor
 - 16 API endpoints
 
+## API
+
+| Method   | Endpoint                     | Action description                    |
+| -------- | ---------------------------- | ------------------------------------- |
+| `POST`   | `/api/sign-in`               | Verify if a user already exists       |
+| `GET`    | `/api/projects`              | Get projects by user                  |
+| `POST`   | `/api/projects`              | Create a project                      |
+| `POST`   | `/api/accounts`              | Create an account                     |
+| `GET`    | `/api/projects/[id]`         | Get a project by id                   |
+| `PATCH`  | `/api/projects/[id]`         | Update a project by id                |
+| `DELETE` | `/api/projects/[id]`         | Delete a project by id                |
+| `GET`    | `/api/projects/[id]/tasks`   | Get tasks by project id               |
+| `POST`   | `/api/projects/[id]/tasks`   | Create a task by project id           |
+| `PATCH`  | `/api/projects/[id]/tasks`   | Update a task by project id           |
+| `DELETE` | `/api/projects/[id]/tasks`   | Delete a task by project id           |
+| `GET`    | `/api/projects/[id]/members` | Get members by project id             |
+| `POST`   | `/api/projects/[id]/members` | Create a member by project id         |
+| `DELETE` | `/api/projects/[id]/members` | Delete a member by project id         |
+| `PATCH`  | `/api/accounts/[id]/general` | Update user general information by id |
+| `PATCH`  | `/api/accounts/[id]/avatar`  | Update an avatar by user id           |
+
 ## 1. Creating an account
 
 Users can create their new account, once they reach the website. They will be automatically redirected to a **Sign in** page. If a user does not have already an existing account, they can click on the **Register** link below the sign-in form. To register a new account, the user must fill in the name, email, and password field, and also upload an avatar for their account profile picture.
