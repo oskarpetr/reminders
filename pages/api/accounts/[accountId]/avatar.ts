@@ -6,7 +6,7 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { id } = request.query;
+  const { accountId } = request.query;
 
   // update avatar
   if (request.method === "PATCH") {
@@ -16,7 +16,7 @@ export default async function handler(
       } = request.body;
 
       // upload avatar
-      const storageRef = ref(storage, `avatars/${id}`);
+      const storageRef = ref(storage, `avatars/${accountId}`);
       await uploadString(storageRef, body.avatar, "data_url");
 
       return response.status(200).json({});

@@ -5,7 +5,7 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { id } = request.query;
+  const { accountId } = request.query;
 
   // update account
   if (request.method === "PATCH") {
@@ -17,7 +17,7 @@ export default async function handler(
       // update account
       await sql`UPDATE account SET name = ${
         body.name
-      } WHERE id = ${id?.toString()}`;
+      } WHERE id = ${accountId?.toString()}`;
 
       return response.status(200).json({});
     } catch (error) {

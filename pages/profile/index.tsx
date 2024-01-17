@@ -2,7 +2,7 @@ import Headline from "@/components/generic/Headline";
 import Icon from "@/components/generic/Icon";
 import Layout from "@/components/generic/Layout";
 import { getAvatar } from "@/utils/avatar";
-import { fetchUpdateProfile } from "@/utils/fetchers";
+import { fetchUpdateAvatar, fetchUpdateProfile } from "@/utils/fetchers";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -42,9 +42,9 @@ export default function Profile() {
   const updateAvatarQuery = useQuery({
     queryKey: ["update-avatar"],
     queryFn: () =>
-      fetchUpdateProfile({
-        name: name!,
+      fetchUpdateAvatar({
         id: parseInt(session?.user?.id as string),
+        avatar: avatar!,
       }),
     enabled: false,
   });
