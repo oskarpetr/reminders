@@ -23,7 +23,7 @@ export default async function handler(
       // create task
       await sql`INSERT INTO task (name, due, done, project_id) VALUES (${
         body.name
-      }, ${body.due}, ${body.done}, ${projectId?.toString()});`;
+      }, ${body.done}, ${projectId?.toString()});`;
 
       // get new task's id
       const getTaskId = await sql`SELECT id FROM task ORDER BY id DESC LIMIT 1`;
