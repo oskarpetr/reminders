@@ -20,6 +20,10 @@ Reminders is an intuitive task-tracking app designed to enhance your productivit
 - Profile info and avatar editor
 - 16 API endpoints
 
+## Database design
+
+<img width="743" alt="SQL scheme" src="https://github.com/user-attachments/assets/fd583e04-e52f-4577-b3a1-a13632224ba6">
+
 ## API
 
 | Method   | Endpoint                     | Action description                    |
